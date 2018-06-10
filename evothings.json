@@ -1,0 +1,41 @@
+{
+  "name": "chocolate",
+  "version": "1.0.0",
+  "title": "Chocolate Boutique Motel",
+  "description": "chocolate boutique motel",
+  "tags": [
+    {
+      "label": "ibeacon",
+      "type": "platform"
+    },
+    {
+      "label": "ble",
+      "type": "comm"
+    }
+  ],
+  "libraries": [
+    {
+      "name": "jquery",
+      "version": "2.1.1"
+    }
+  ],
+  "plugins": [
+    {
+      "name": "cordova-plugin-ibeacon",
+      "version": "3.4.3"
+    },
+    {
+      "name": "de.appplant.cordova.plugin.local-notification",
+      "version": "0.8.4"
+    }
+  ],
+  "index-file": "index.html",
+  "uuid": "699da0f5-a5dd-4a12-a0ec-1d1717e03359",
+  "icon": "app-icon.png",
+  "doc-url": "http://evothings.com/2.2/doc/examples/ibeacon-scan.html",
+  "long-description": "chocolate boutique motel",
+  "cordova-id": "com.evothings.examples.ibeaconscan",
+  "author-name": "Evothings",
+  "author-email": "build@evothings.com",
+  "author-url": "https://evothings.com"
+}

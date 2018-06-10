@@ -1,0 +1,205 @@
+
+<div data-page="premios">
+<template>
+<div class="page">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="left">
+<!--    <a href="#" class="link back">
+          <i class="icon icon-back"></i>
+          <span class="ios-only">Atrás</span>
+        </a> -->
+      </div>
+      <div class="title">Premios</div>
+      <div class="right"></div>
+      <div class="subnavbar">
+        <div class="subnavbar-inner">
+          <div class="segmented segmented-raised">
+            <a class="button tab-link tab-link-active" href="#motel">Motel</a>
+            <a class="button tab-link" href="#barra">Barra</a>
+            <a class="button tab-link" href="#cocina">Cocina</a>
+            <a class="button tab-link" href="#sexshop">Sex Shop</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-content tabs-animated-wrap">
+    <div class="tabs">
+      <!-- SUITES -->
+      <div class="page-content tab tab-active" id="motel">
+        <div class="list media-list habitaciones-list" style="margin-top: -100px;">
+
+        </div>
+      </div> <!-- Fin de -->
+      <!-- SNACKS -->
+      <div class="page-content tab" id="barra">
+        <div class="list media-list snack-list" style="margin-top: -100px;">
+        </div>
+      </div>
+      <!-- COCINA -->
+      <div class="page-content tab" id="cocina">
+        <div class="list media-list cocina-list" style="margin-top: -100px;">
+
+        </div>
+      </div>
+
+      <!-- SEX SHOP -->
+      <div class="page-content tab" id="sexshop">
+        <div class="list media-list sex-shop-list" style="margin-top: -100px;">
+
+        </div>
+      </div>
+
+  </div>
+</div>
+</template>
+</div>
+<script>
+  return {
+    data: function () {
+      return {
+        products: this.$root.products,
+      };
+    }
+  };
+</script>
+<script>
+  return {
+    methods: {
+      openConfirm: function () {
+        var app = this.$app;
+        app.dialog.confirm('Se agrego el premio a tu pedido', '¡Listo!', function () {
+
+          // app.dialog.alert('Te has ganado este premio en tu próxima visita a Chocolate Motel Boutique', '¡Listo!');
+        });
+      },
+            showToastBottom: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastBottom) {
+          self.toastBottom = self.$app.toast.create({
+            text: 'This is default bottom positioned toast',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastBottom.open();
+      },
+      showToastTop: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastTop) {
+          self.toastTop = self.$app.toast.create({
+            text: 'Top positioned toast',
+            position: 'top',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastTop.open();
+      },
+      showToastCenter: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastCenter) {
+          self.toastCenter = self.$app.toast.create({
+            text: 'Se agrego el premio a tu pedido',
+            position: 'center',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastCenter.open();
+      },
+      showToastIcon: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastIcon) {
+          self.toastIcon = self.$app.toast.create({
+            icon: self.$theme.ios ? '<i class="f7-icons">star</i>' : '<i class="material-icons">star</i>',
+            text: 'I\'m with icon',
+            position: 'center',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastIcon.open();
+      },
+      showToastLargeMessage: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastLargeMessage) {
+          self.toastLargeMessage = self.$app.toast.create({
+            text: 'This toast contains a lot of text. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil, quae, ab. Delectus amet optio facere autem sapiente quisquam beatae culpa dolore.',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastLargeMessage.open();
+      },
+      showToastWithButton: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastWithButton) {
+          self.toastWithButton = self.$app.toast.create({
+            text: 'Toast with additional close button',
+            closeButton: true,
+          });
+        }
+        // Open it
+        self.toastWithButton.open();
+      },
+      showToastWithCustomButton: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastWithCustomButton) {
+          self.toastWithCustomButton = self.$app.toast.create({
+            text: 'Custom close button',
+            closeButton: true,
+            closeButtonText: 'Close Me',
+            closeButtonColor: 'red',
+          });
+        }
+        // Open it
+        self.toastWithCustomButton.open();
+      },
+      showToastWithCallback: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastWithCallback) {
+          self.toastWithCallback = self.$app.toast.create({
+            text: 'Callback on close',
+            closeButton: true,
+            on: {
+              close: function () {
+                self.$app.dialog.alert('Toast closed');
+              },
+            }
+          });
+        }
+        // Open it
+        self.toastWithCallback.open();
+      },
+    },
+    on: {
+      pageBeforeOut: function () {
+        var self = this;
+        self.$app.toast.close();
+      },
+      pageBeforeRemove: function () {
+        var self = this;
+        // Destroy toasts when page removed
+        if (self.toastBottom) self.toastBottom.destroy();
+        if (self.toastTop) self.toastTop.destroy();
+        if (self.toastCenter) self.toastCenter.destroy();
+        if (self.toastIcon) self.toastIcon.destroy();
+        if (self.toastLargeMessage) self.toastLargeMessage.destroy();
+        if (self.toastWithButton) self.toastWithButton.destroy();
+        if (self.toastWithCustomButton) self.toastWithCustomButton.destroy();
+        if (self.toastWithCallback) self.toastWithCallback.destroy();
+      },
+    }
+  }
+</script>
+

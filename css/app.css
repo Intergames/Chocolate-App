@@ -1,0 +1,46 @@
+/* Your app styles here */
+.ios .tabbar-labels .tab-link:not(.tab-link-active) .icon-ios-fill {
+  display: none;
+}
+.ios .tabbar-labels .tab-link.tab-link-active .icon:not(.icon-ios-fill) {
+  display: none;
+}
+
+.logo{ width:200px; height: 160px; margin-top:-30px; background-image:url(../images/logo.png); background-size:cover;}
+
+.usuario{ width:120px; height: 120px; margin-top:30px; background-image:url(../images/user.png); background-size:cover;}
+
+.page-content{padding-top: 44px; background-image: url("../images/bg.jpg"); background-size: 100% 100%;}
+
+.page-content-left
+{
+	background-color: #99CC33;
+	margin-top: 20px;
+}
+
+.demo-card-header-pic .card-header {
+  height: 60vw;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+.demo-card-header-pic .card-content-padding .date{
+  color: #8e8e93;
+}
+.swipeout-actions-right>a,{
+	background:#ED8AF4;
+}
+
+
+.md .dialog {
+    width: 280px;
+    margin-left: -140px;
+    border-radius: 3px;
+    color: #757575;
+    background: #000;
+    font-size: 16px;
+    color: white;
+    -webkit-box-shadow: 0 19px 38px rgba(0,0,0,.3),0 15px 12px rgba(0,0,0,.22);
+    box-shadow: 0 19px 38px rgba(0,0,0,.3),0 15px 12px rgba(0,0,0,.22);
+}
+

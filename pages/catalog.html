@@ -1,0 +1,223 @@
+<template>
+<div class="page">
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="title">Premios</div>
+    </div>
+  </div>
+<div class="list"><br>
+  <center><h3>Tienes: <strong>1400</strong> puntos</h3></center>
+    <center><span>Desliza hacia la izquierda sobre<br>la suite que desees canjear</span></center><br>
+  <ul>
+    <li class="swipeout">
+      <div class="item-content swipeout-content">
+        <div class="item-media">
+          <img src="images/fiestera.jpg" width="80"/>
+        </div>
+        <div class="item-inner">
+          <div class="item-title">Suite fiestera</div>
+          <div class="item-after">2300 Puntos</div>
+        </div>
+      </div>
+      <div class="swipeout-actions-right">
+        <a href="" class="open-more-actions color-orange" @click="openConfirm">Canjear suite</a>
+      </div>
+    </li>
+   
+    <li class="swipeout">
+      <div class="item-content swipeout-content">
+        <div class="item-media">
+          <img src="images/jacuzzi.jpg" width="80"/>
+        </div>
+        <div class="item-inner">
+          <div class="item-title">Suite Jacuzzi</div>
+          <div class="item-after">1500 Puntos</div>
+        </div>
+      </div>
+      <div class="swipeout-actions-right">
+        <a href="#" class="open-more-actions color-pink" @click="openConfirm">Canjear suite</a>
+
+      </div>  
+    </li>
+    
+    <li class="swipeout">
+      <div class="item-content swipeout-content">
+        <div class="item-media">
+          <img src="images/tubo.jpg" width="80"/>
+        </div>
+        <div class="item-inner">
+          <div class="item-title">Suite Tubo</div>
+          <div class="item-after">1000 Puntos</div>
+        </div>
+      </div>
+      <div class="swipeout-actions-right">
+        <a href="#" class="open-more-actions color-yellow" @click="openConfirm">Canjear suite</a>
+      </div>
+    </li>
+    
+    <li class="swipeout">
+      <div class="item-content swipeout-content">
+        <div class="item-media">
+          <img src="images/peatonal.jpg" width="80"/>
+        </div>
+        <div class="item-inner">
+          <div class="item-title">Suite Peatonal</div>
+          <div class="item-after">700 Puntos</div>
+        </div>
+      </div>
+      <div class="swipeout-actions-right">
+        <a href="#" class="open-more-actions color-red" @click="openConfirm">Canjear suite</a>
+      </div>
+    </li>
+  </ul>
+</div>
+</div>
+
+</template>
+<script>
+  return {
+    data: function () {
+      return {
+        products: this.$root.products,
+      };
+    }
+  };
+</script>
+<script>
+  return {
+    methods: {
+      openConfirm: function () {
+        var app = this.$app;
+        app.dialog.confirm('Estas seguro que deseas canjear esta habitacion?', '¡Espera!', function () {
+          app.dialog.alert('Te has ganado este premio en tu próxima visita a Chocolate Motel Boutique', '¡Listo!');
+        });
+      },
+            showToastBottom: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastBottom) {
+          self.toastBottom = self.$app.toast.create({
+            text: 'This is default bottom positioned toast',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastBottom.open();
+      },
+      showToastTop: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastTop) {
+          self.toastTop = self.$app.toast.create({
+            text: 'Top positioned toast',
+            position: 'top',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastTop.open();
+      },
+      showToastCenter: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastCenter) {
+          self.toastCenter = self.$app.toast.create({
+            text: 'I\'m on center',
+            position: 'center',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastCenter.open();
+      },
+      showToastIcon: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastIcon) {
+          self.toastIcon = self.$app.toast.create({
+            icon: self.$theme.ios ? '<i class="f7-icons">star</i>' : '<i class="material-icons">star</i>',
+            text: 'I\'m with icon',
+            position: 'center',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastIcon.open();
+      },
+      showToastLargeMessage: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastLargeMessage) {
+          self.toastLargeMessage = self.$app.toast.create({
+            text: 'This toast contains a lot of text. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil, quae, ab. Delectus amet optio facere autem sapiente quisquam beatae culpa dolore.',
+            closeTimeout: 2000,
+          });
+        }
+        // Open it
+        self.toastLargeMessage.open();
+      },
+      showToastWithButton: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastWithButton) {
+          self.toastWithButton = self.$app.toast.create({
+            text: 'Toast with additional close button',
+            closeButton: true,
+          });
+        }
+        // Open it
+        self.toastWithButton.open();
+      },
+      showToastWithCustomButton: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastWithCustomButton) {
+          self.toastWithCustomButton = self.$app.toast.create({
+            text: 'Custom close button',
+            closeButton: true,
+            closeButtonText: 'Close Me',
+            closeButtonColor: 'red',
+          });
+        }
+        // Open it
+        self.toastWithCustomButton.open();
+      },
+      showToastWithCallback: function () {
+        var self = this;
+        // Create toast
+        if (!self.toastWithCallback) {
+          self.toastWithCallback = self.$app.toast.create({
+            text: 'Callback on close',
+            closeButton: true,
+            on: {
+              close: function () {
+                self.$app.dialog.alert('Toast closed');
+              },
+            }
+          });
+        }
+        // Open it
+        self.toastWithCallback.open();
+      },
+    },
+    on: {
+      pageBeforeOut: function () {
+        var self = this;
+        self.$app.toast.close();
+      },
+      pageBeforeRemove: function () {
+        var self = this;
+        // Destroy toasts when page removed
+        if (self.toastBottom) self.toastBottom.destroy();
+        if (self.toastTop) self.toastTop.destroy();
+        if (self.toastCenter) self.toastCenter.destroy();
+        if (self.toastIcon) self.toastIcon.destroy();
+        if (self.toastLargeMessage) self.toastLargeMessage.destroy();
+        if (self.toastWithButton) self.toastWithButton.destroy();
+        if (self.toastWithCustomButton) self.toastWithCustomButton.destroy();
+        if (self.toastWithCallback) self.toastWithCallback.destroy();
+      },
+    }
+  }
+</script>
+
