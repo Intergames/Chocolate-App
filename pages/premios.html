@@ -1,14 +1,8 @@
-
-<div data-page="premios">
 <template>
-<div class="page">
+<div class="page" data-name="catalog">
   <div class="navbar">
     <div class="navbar-inner">
       <div class="left">
-<!--    <a href="#" class="link back">
-          <i class="icon icon-back"></i>
-          <span class="ios-only">Atrás</span>
-        </a> -->
       </div>
       <div class="title">Premios</div>
       <div class="right"></div>
@@ -28,33 +22,32 @@
     <div class="tabs">
       <!-- SUITES -->
       <div class="page-content tab tab-active" id="motel">
-        <div class="list media-list habitaciones-list" style="margin-top: -100px;">
+        <div class="list media-list virtual-list habitaciones-list" style="margin-top: -100px;">
 
         </div>
-      </div> <!-- Fin de -->
+      </div>
       <!-- SNACKS -->
       <div class="page-content tab" id="barra">
-        <div class="list media-list snack-list" style="margin-top: -100px;">
+        <div class="list media-list virtual-list snack-list" style="margin-top: -100px;">
         </div>
       </div>
       <!-- COCINA -->
       <div class="page-content tab" id="cocina">
-        <div class="list media-list cocina-list" style="margin-top: -100px;">
-
+        <div class="list media-list virtual-list cocina-list" style="margin-top: -100px;">
+          
         </div>
       </div>
 
       <!-- SEX SHOP -->
       <div class="page-content tab" id="sexshop">
-        <div class="list media-list sex-shop-list" style="margin-top: -100px;">
+        <div class="list media-list virtual-list sexshop-list" style="margin-top: -100px;">
 
         </div>
       </div>
-
   </div>
 </div>
 </template>
-</div>
+
 <script>
   return {
     data: function () {
@@ -67,14 +60,7 @@
 <script>
   return {
     methods: {
-      openConfirm: function () {
-        var app = this.$app;
-        app.dialog.confirm('Se agrego el premio a tu pedido', '¡Listo!', function () {
-
-          // app.dialog.alert('Te has ganado este premio en tu próxima visita a Chocolate Motel Boutique', '¡Listo!');
-        });
-      },
-            showToastBottom: function () {
+      showToastBottom: function () {
         var self = this;
         // Create toast
         if (!self.toastBottom) {
@@ -202,4 +188,3 @@
     }
   }
 </script>
-

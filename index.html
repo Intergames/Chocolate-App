@@ -41,22 +41,19 @@
               <ul>
                 <li>
                   <a href="/about/" data-view=".view-main" class="panel-close">
-                  	<!-- <i class="icon f7-icons ios-only">star</i> -->
             		    <i class="icon f7-icons ios-only icon-ios-fill">star_fill</i>
             		    <i class="icon material-icons md-only">star</i>
                   	<span class="tabbar-label" style="margin-right: 83px; margin-top: 5px;">Mis puntos</span></a>
                 </li>
                 <li>
-                  <a href="#" data-view=".view-main" class="panel-close button-raised">
-                  	<!-- <i class="icon f7-icons ios-only">settings</i> -->
+                  <a href="#"  class="panel-close button-raised historial-list">
             		    <i class="icon f7-icons ios-only icon-ios-fill">settings_fill</i>
             		    <i class="icon material-icons md-only">build</i>
                   	<span class="tabbar-label" style="margin-right: 105px; margin-top: 5px;">Historial</span></a>
                 </li>
                 <li>
                   <a href="#" data-view=".view-main" class="back">
-                  <!-- 	<i class="icon f7-icons ios-only">lock</i> -->
-            		    <i class="icon f7-icons ios-only icon-ios-fill">lock_fill</i>
+                    <i class="icon f7-icons ios-only icon-ios-fill">lock_fill</i>
             		    <i class="icon material-icons md-only">lock</i>
                   	<span class="tabbar-label" style="margin-right: 70px; margin-top: 5px;">Cerrar sesion</span></a>
                 </li>
@@ -86,17 +83,17 @@
       <!-- Tabbar for switching views-tabs --> 
       <div class="toolbar tabbar-labels toolbar-bottom-md">
         <div class="toolbar-inner">
-          <a href="#view-home" class="tab-link tab-link-active">
+          <a href="#view-home" class="tab-link  tab-link-active">
             <i class="icon f7-icons ios-only disabled">home</i>
             <i class="icon f7-icons ios-only icon-ios-fill">home_fill</i>
             <i class="icon material-icons md-only">home</i>
             <span class="tabbar-label">Inicio</span>
           </a>
-          <a href="#view-premios" class="tab-link">
+          <a href="/premios/" class="tab-link premios-icon">
             <i class="icon f7-icons ios-only">list</i>
             <i class="icon f7-icons ios-only icon-ios-fill">list_fill</i>
             <i class="icon material-icons md-only">list</i>
-            <span class="tabbar-label">Premios</span>
+            <span class="tabbar-label premios-icon">Premios</span>
           </a>
           <a href="" class="tab-link">
             <i class="icon material-icons">shopping_cart<span class="badge color-red">0</span></i>
@@ -324,11 +321,6 @@
     </div>
 
   </div>
-  <!-- Cordova -->
-  <!--
-  <script src="cordova.js"></script>
-  -->
-
   <!-- Framework7 library -->
   <script src="framework7/js/framework7.min.js"></script>
   <!-- App routes -->
@@ -337,56 +329,28 @@
   <script src="js/app.js"></script>
 
   <script type="text/javascript">
-        $(document).ready(function () {
-        app.popup.open(".demo-login",false);
-        });
-
-        // Login
+    $(document).ready(function () {
+      app.popup.open(".demo-login",false);
+    });
         
-
-       $$('.open-prompt').on('click', function () {
-        app.dialog.prompt('Escribe tu correo electrónico para reestablecer contraseña', 'CONTRASEÑA OLVIDADA', function (name) {
-          app.dialog.confirm('Tu correo es ' + name + '?', '', function () {
-            app.dialog.alert('Se ha enviado un correo a ' + name + ', sigue las instrucciones para poder reestablecer tu contraseña. Revisa tu bandeja de SPAM si no lo ves en tu bandeja de entrada','¡LISTO!');
-          });
+    $$('.open-prompt').on('click', function () {
+      app.dialog.prompt('Escribe tu correo electrónico para reestablecer contraseña', 'CONTRASEÑA OLVIDADA', function (name) {
+        app.dialog.confirm('Tu correo es ' + name + '?', '', function () {
+          app.dialog.alert('Se ha enviado un correo a ' + name + ', sigue las instrucciones para poder reestablecer tu contraseña. Revisa tu bandeja de SPAM si no lo ves en tu bandeja de entrada','¡LISTO!');
         });
       });
-
-
-      // Prompt
-      $$('.open-registro').on('click', function () {
-        app.dialog.prompt('Nombre de usuario', 'Paso 1...',function (name) {
-          app.dialog.prompt('Correo electrónico', 'Paso 2...',function (name) {
-            app.dialog.password('Contraseña', 'Paso 3...',function (name) {
-                app.dialog.alert('Registro completado! ' + name, '¡LISTO!',);
-              });
-            }); 
-          });
+    });
+    // Prompt
+    $$('.open-registro').on('click', function () {
+      app.dialog.prompt('Nombre de usuario', 'Paso 1...',function (name) {
+        app.dialog.prompt('Correo electrónico', 'Paso 2...',function (name) {
+          app.dialog.password('Contraseña', 'Paso 3...',function (name) {
+              app.dialog.alert('Registro completado! ' + name, '¡LISTO!',);
+            });
+          }); 
         });
-
-
-
+      });
   </script>
-<script>
-    return {
-        on: {
-            pageInit: function(page) {
-                console.log(page)
-                var toggle = this.$app.toggle.create({
-                    el: '#toggle_slide',
-                    on: {
-                        change: function() {
-                            console.log('not working');
-                        }
-                    }
-                });
-
-                // Below line is also not working;
-                console.log('>> ', toggle.checked);
-            }
-        }
-    }
-</script>
 </body>
 </html>
 
