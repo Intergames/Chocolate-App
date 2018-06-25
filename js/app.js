@@ -110,13 +110,13 @@ var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
 
   $$.getJSON(serviceURL + 'listadoPremios.php', "habitaciones" , function(data) {
     listaHabitaciones =  data;         
-    var myVal = myApp.virtualList('.list.media-list.habitaciones-list', {
+    var myVal = myApp.virtualList('.habitaciones-list', {
       items: listaHabitaciones,
       template: 
       '<div class="card demo-card-header-pic" style="background-color: #ffffff;">' +
         '<div style="background-image:url(http://chocolateboutiquemotel.com/demoapp/images/jacuzzi.jpg)" class="card-header align-items-flex-end"></div>' +
         '<div class="card-content card-content-padding">' +
-          '<div class="row" style="margin-top: -35px;">' +
+        '<div class="row" style="margin-top: -3px;">' +
             '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
               '<p style="text-transform: uppercase; color:#000000;">{{DisplayHabitacion}}</p>' +
             '</div>' +
