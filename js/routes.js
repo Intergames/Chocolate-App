@@ -13,11 +13,11 @@ routes = [
     componentUrl: './pages/premios.html',
     on: {
       pageInit: function (event, page) {
-        console.log("Se cargo la lista de premios");
-        // actualizarListadoPremios("Habitacion", ".habitaciones-list");
-        // actualizarListadoPremios("Barra", ".snack-list");
-        // actualizarListadoPremios("Cocina", ".cocina-list");
-        // actualizarListadoPremios("SexShop", ".sexshop-list");
+        console.log(page);
+        if (page.route.name=='Premios')
+        {
+          console.log("Se cargo la lista de premios");
+        }
       }
     }
   },

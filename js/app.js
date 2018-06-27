@@ -68,70 +68,60 @@ function esNumero(numero) {
 }
 
 function actualizarListadoPremios(pTipoPremio, elList) {
-  console.log("Entramos a la funciona para llenar la listas virtuales de los premios ");
   app.request.post(serviceURL + "listadoPremios.php", { TipoPremio: pTipoPremio }, function (data) {
     app.preloader.show();
     var conversion = JSON.parse(data);
-    console.log(conversion);
-    var instanciaVirtualList = app.virtualList.get(elList);
-    console.log("Esta es la instancia de la lista virtual: "+instanciaVirtualList);
-    instanciaVirtualList.appendItems(conversion);
+    app.virtualList.create({
+      el: elList,
+      items: conversion,
+      itemTemplate: '<div class="card demo-card-header-pic" style="background-color: #ffffff;">' +
+        '<div style="background-image:url(http://chocolateboutiquemotel.com/demoapp/images/{{imgPremio}})" class="card-header align-items-flex-end"></div>' +
+        '<div class="card-content card-content-padding">' +
+        '<div class="row" style="margin-top: -35px;">' +
+        '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
+        '<p style="text-transform: uppercase; color:#000000;">{{Premio}}</p>' +
+        '</div>' +
+        '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
+        '<p class="date" style="font-weight: bold; font-size: 14px; color: orange; letter-spacing: -1.2px;">Valor: {{Puntos}} Puntos</p>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row" style="margin-top: -35px;">' +
+        '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
+        '<p style="color: black;">Cantidad</p>' +
+        '<div class="col">' +
+        '<div class="stepper stepper-init stepper-fill color-orange">' +
+        '<div class="stepper-button-minus"></div>' +
+        '<div class="stepper-input-wrap">' +
+        '<input type="text" value="1" min="1" max="1" step="1" readonly>' +
+        '</div>' +
+        '<div class="stepper-button-plus"></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="col-50 tablet-50" style="margin-top: 53px;"><img src="" alt="" title="" width="99%"/>' +
+        '<a href="/detallePremio/Id/{{IdPremio}}/TipoPremio/{{TipoPremio}}/" class="button button-small button-fill button-raised color-green link" @click="showToastCenter">Agregar a pedido</a>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    });
     app.preloader.hide();
+    console.log("Terminamos de llenar la lista virtual" + elList);
   }); 
 }
 
-function crearListaVirtual(el) {
-  console.log("Se va a crear la lista: " + el);
-  app.virtualList.create({
-    el: el,
-    items: [],
-    itemTemplate: '<div class="card demo-card-header-pic" style="background-color: #ffffff;">' +
-      '<div style="background-image:url(http://chocolateboutiquemotel.com/demoapp/images/{{imgPremio}})" class="card-header align-items-flex-end"></div>' +
-      '<div class="card-content card-content-padding">' +
-      '<div class="row" style="margin-top: -35px;">' +
-      '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
-      '<p style="text-transform: uppercase; color:#000000;">{{Premio}}</p>' +
-      '</div>' +
-      '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
-      '<p class="date" style="font-weight: bold; font-size: 14px; color: orange; letter-spacing: -1.2px;">Valor: {{Puntos}} Puntos</p>' +
-      '</div>' +
-      '</div>' +
-      '<div class="row" style="margin-top: -35px;">' +
-      '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
-      '<p style="color: black;">Cantidad</p>' +
-      '<div class="col">' +
-      '<div class="stepper stepper-init stepper-fill color-orange">' +
-      '<div class="stepper-button-minus"></div>' +
-      '<div class="stepper-input-wrap">' +
-      '<input type="text" value="1" min="1" max="1" step="1" readonly>' +
-      '</div>' +
-      '<div class="stepper-button-plus"></div>' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
-      '<div class="col-50 tablet-50" style="margin-top: 53px;"><img src="" alt="" title="" width="99%"/>' +
-      '<a href="/detallePremio/Id/{{IdPremio}}/TipoPremio/{{TipoPremio}}/" class="button button-small button-fill button-raised color-green link" @click="showToastCenter">Agregar a pedido</a>' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
-      '</div>'
-  });
-}
 
-$$(document).on('pageInit', '.page[data-page="premios"]', function (e) {
-
+$$(document).on('pageInit', '.page[data-page="premiosList"]', function (e) {
 
 });
 
 $$('.premios-icon').on('click', function () {
-  crearListaVirtual('.habitaciones-list');
-  crearListaVirtual('.snack-list');
-  crearListaVirtual('.cocina-list');
-  crearListaVirtual('.sexshop-list');
-  actualizarListadoPremios("Habitacion", ".habitaciones-list");
-  actualizarListadoPremios("Barra", ".snack-list");
-  actualizarListadoPremios("Cocina", ".cocina-list");
-  actualizarListadoPremios("SexShop", ".sexshop-list");
+  console.log("Iniciando llenado de listas virtuales");
+  actualizarListadoPremios('Habitacion','.habitaciones-list');
+  actualizarListadoPremios('Barra','.snack-list');
+  actualizarListadoPremios('Cocina','.cocina-list');
+  actualizarListadoPremios('SexShop','.sexshop-list');
+  console.log("Terminando de llenar listas virtuales");
 });
 // Specify your beacon 128bit UUIDs here.
 var regions =
