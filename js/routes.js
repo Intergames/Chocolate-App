@@ -13,10 +13,13 @@ routes = [
     componentUrl: './pages/premios.html',
     on: {
       pageInit: function (event, page) {
-        console.log(page);
-        if (page.route.name=='Premios')
+        if (page.route.name=='premios')
         {
-          console.log("Se cargo la lista de premios");
+          console.log("Se cargo la lista de premios desde routes.js");
+          actualizarListadoPremios('Habitacion', '.habitaciones-list');
+          actualizarListadoPremios('Barra', '.snack-list');
+          actualizarListadoPremios('Cocina', '.cocina-list');
+          actualizarListadoPremios('SexShop', '.sexshop-list');
         }
       }
     }
@@ -63,7 +66,6 @@ routes = [
       console.log("IdPremio: " + vIdPremio);
       var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
       app.request.post(serviceURL + "detallePremio.php", {IdPremio: vIdPremio, TipoPremio : vTipoPremio } , function (data) { 
-        console.log("Esto es lo que llega del server: " + data);
         var algo = JSON.parse(data);
         var user = algo;
         app.preloader.hide();

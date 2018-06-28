@@ -106,7 +106,6 @@ function actualizarListadoPremios(pTipoPremio, elList) {
         '</div>'
     });
     app.preloader.hide();
-    console.log("Terminamos de llenar la lista virtual" + elList);
   }); 
 }
 
@@ -116,12 +115,7 @@ $$(document).on('pageInit', '.page[data-page="premiosList"]', function (e) {
 });
 
 $$('.premios-icon').on('click', function () {
-  console.log("Iniciando llenado de listas virtuales");
-  actualizarListadoPremios('Habitacion','.habitaciones-list');
-  actualizarListadoPremios('Barra','.snack-list');
-  actualizarListadoPremios('Cocina','.cocina-list');
-  actualizarListadoPremios('SexShop','.sexshop-list');
-  console.log("Terminando de llenar listas virtuales");
+  
 });
 // Specify your beacon 128bit UUIDs here.
 var regions =
