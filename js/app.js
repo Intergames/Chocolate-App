@@ -26,6 +26,10 @@ $$('.btn-registrar').on('click', function () {
   });
 });
 // Init/Create views
+localStorage.setItem("Premio1","");
+localStorage.setItem("Puntaje1","");
+localStorage.setItem("Premio2","");
+localStorage.setItem("Puntaje2","");
 var homeView = app.views.create('#view-home', {
   url: '/'
 });

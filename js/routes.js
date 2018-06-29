@@ -39,16 +39,65 @@ routes = [
          if (page.route.name == 'pedido') {
            var vIdPremio = localStorage.getItem("IdPremioGlobal");
            var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
-           // Hacemos la consulta al server para recibor de que premio se trata, cuantos puntos se requieren, 
+           // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
            var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
            app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
             var info = JSON.parse(data);
             var elemento =[];
-            elemento.push({
-              Premio: info.Premio,
-              Puntos: info.Puntos
-            })
-            console.log(info);
+            var Premio1 = localStorage.getItem("Premio1");
+            var Puntaje1 = localStorage.getItem("Puntaje1");
+            var Premio2 = localStorage.getItem("Premio2");
+            var Puntaje2 = localStorage.getItem("Puntaje2");
+
+            if (Premio1 == "" && Premio2 == "")
+            { // Como está vacias esas variables, significa que es el primer elemento que eligen.
+              localStorage.setItem("Premio1", info.Premio);
+              localStorage.setItem("Puntaje1", info.Puntos);
+              elemento.push({
+                Premio: info.Premio,
+                Puntos: info.Puntos
+              })
+            }
+            else if (Premio1 != "" && Premio2 == "")
+            {
+              
+              var PremioAnterior = localStorage.getItem("Premio1");
+              var PuntajeAnterior = localStorage.getItem("Puntaje1");
+              localStorage.setItem("Premio2", info.Premio);
+              localStorage.setItem("Puntaje2", info.Puntos);
+              
+              elemento.push({
+                Premio: PremioAnterior,
+                Puntos: PuntajeAnterior
+              })
+              elemento.push({
+                Premio: info.Premio,
+                Puntos: info.Puntos
+              })
+            }
+            else if(Premio1 != "" && Premio2!= "")
+            {
+              app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo");
+              elemento.push({
+                Premio: Premio1,
+                Puntos: Puntaje1
+              })
+              elemento.push({
+                Premio: Premio2,
+                Puntos: Puntaje2
+              })
+            }      
+            // Calculamos la suma de puntos de de ambos elementos
+            var Premio1 = localStorage.getItem("Premio1");
+            var Puntaje1 = localStorage.getItem("Puntaje1");
+            var Premio2 = localStorage.getItem("Premio2");
+            var Puntaje2 = localStorage.getItem("Puntaje2");
+            if (Puntaje1 == "")
+              Puntaje1 = 0;
+            if (Puntaje2 == "")
+              Puntaje2 = 0;
+            var PuntajePedido = parseFloat(Puntaje1) + parseFloat(Puntaje2);
+            $$('.SumaPuntos').text(PuntajePedido);
             app.virtualList.create({
               // List Element
               el: '.pedidos-list',
