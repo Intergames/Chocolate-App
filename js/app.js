@@ -108,14 +108,6 @@ function actualizarListadoPremios(pTipoPremio, elList) {
   }); 
 }
 
-
-$$(document).on('page:init', '.page[data-page="premiosList"]', function (e) {
-  
-});
-
-$$('.premios-icon').on('click', function () {
-  
-});
 // Specify your beacon 128bit UUIDs here.
 var regions =
   [
