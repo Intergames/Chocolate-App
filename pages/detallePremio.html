@@ -8,21 +8,21 @@
 							<span class="ios-only">Back</span>
 						</a>
 					</div>
-					<div class="title">{{user.Premio}}</div>
+					<div class="title">{{premio.Premio}}</div>
 				</div>
 			</div>
 			<div class="page-content">
 				<div class="block block-strong">
-					<img src="http://chocolateboutiquemotel.com/demoapp/images/{{user.imgPremio}}" style="width: 100%"/>
+					<img src="http://chocolateboutiquemotel.com/demoapp/images/{{premio.imgPremio}}" style="width: 100%"/>
 				</div>
 				<div class="block block-strong">
-					{{user.Premio}}
+					{{premio.Premio}}
 				</div>
 				<div class="block block-strong">
-					{{user.Puntos}}
+					{{premio.Puntos}}
 				</div>
 				<div class="block block-strong">
-					<a href="/detallePremio/pedidos/1/" class="button button-small button-fill button-raised color-green">Agregar a pedido</a>
+					<a href="/detallePremio/IdPremio/{{premio.IdPremio}}/TipoPremio/{{premio.TipoPremio}}/" class="button button-small button-fill button-raised color-green">Agregar a pedido</a>
 				</div>
 			</div>
     </div>

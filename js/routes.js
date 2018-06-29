@@ -3,10 +3,17 @@ routes = [
     path: '/',
     url: './index.html'
   },
+
   {
     path: '/about/',
     url: './pages/about.html'
   },
+
+  {
+    path: '/carrito/',
+    url: './pages/pedidos.html'
+  },
+
   {
     path: '/premios/',
     name: 'premios',
@@ -15,7 +22,6 @@ routes = [
       pageInit: function (event, page) {
         if (page.route.name=='premios')
         {
-          console.log("Se cargo la lista de premios desde routes.js");
           actualizarListadoPremios('Habitacion', '.habitaciones-list');
           actualizarListadoPremios('Barra', '.snack-list');
           actualizarListadoPremios('Cocina', '.cocina-list');
@@ -24,35 +30,62 @@ routes = [
       }
     }
   },
+  // Agregar un elemento a la lista de pedidos
   {
-    path: '/detallePremio/pedidos/:IdPedido/',
+    path: '/detallePremio/IdPremio/:IdPremio/TipoPremio/:TipoPremio/',
     name: 'pedido' ,
+    on: {
+      pageInit: function (event, page) {
+         if (page.route.name == 'pedido') {
+           var vIdPremio = localStorage.getItem("IdPremioGlobal");
+           var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
+           // Hacemos la consulta al server para recibor de que premio se trata, cuantos puntos se requieren, 
+           var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+           app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
+            var info = JSON.parse(data);
+            var elemento =[];
+            elemento.push({
+              Premio: info.Premio,
+              Puntos: info.Puntos
+            })
+            console.log(info);
+            app.virtualList.create({
+              // List Element
+              el: '.pedidos-list',
+              // Pass array with items
+              items: elemento,          
+              // List item Template7 template
+              itemTemplate: '<li>' +
+                '<a href="#" class="item-link item-content">' +
+                '<div class="item-inner">' +
+                '<div class="item-title-row">' +
+                '<div class="item-title">{{Premio}}</div>' +
+                '</div>' +
+                '<div class="item-subtitle">{{Puntos}}</div>' +
+                '</div>' +
+                '</a>' +
+                '</li>',
+              // Item height
+              height: app.theme === 'ios' ? 63 : 73,
+            });
+          });
+        }
+      }
+    },
     async: function (routeTo, routeFrom, resolve, reject) {
       var router = this;
       var app = router.app;
-      var vIdPedido = routeTo.params.IdPedido;
       app.preloader.show();
-      console.log("Se cargo la página de los pedidos: ");
-       var user = {
-         "firstName": "Vladimir",
-         "lastName": "putaminof",
-         "userId": vIdPedido,
-         "about": "Hello, i am creator of Framework7! Hope you like it!"
-       };
+      // Recibimos las variables
+      var vIdPremio = routeTo.params.IdPremio;
+      var vTipoPremio = routeTo.params.TipoPremio;
+      localStorage.setItem("IdPremioGlobal",vIdPremio);
+      localStorage.setItem("TipoPremioGlobal",vTipoPremio);
+      app.preloader.hide();
       resolve({
         componentUrl: './pages/pedidos.html'
-      }, {
-        context: {
-          user: user
-        }
-      })
-      app.preloader.hide();
-    }, 
-    on: {
-      pageInit: function (event, page) {
-        console.log("Se acaba a Pedidos");
-      }
-    }
+      }) 
+    } // Fin de funcion asyncrona
   },
   {
     path: '/detallePremio/Id/:idPremio/TipoPremio/:TipoPremio/',
@@ -62,12 +95,9 @@ routes = [
       app.preloader.show();
       var vIdPremio = routeTo.params.idPremio;
       var vTipoPremio = routeTo.params.TipoPremio;
-      console.log("TipoPremio: " + vTipoPremio);
-      console.log("IdPremio: " + vIdPremio);
       var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
       app.request.post(serviceURL + "detallePremio.php", {IdPremio: vIdPremio, TipoPremio : vTipoPremio } , function (data) { 
-        var algo = JSON.parse(data);
-        var user = algo;
+        var info = JSON.parse(data);
         app.preloader.hide();
         resolve(
           {
@@ -75,13 +105,14 @@ routes = [
           },
           {
             context: {
-              user: user
+              premio: info
             }
           }
         )
       });  
     },
   },
+
   {
     path: '/cambiarpass/',
     componentUrl: './pages/cambiarpass.html'
@@ -94,7 +125,7 @@ routes = [
 
   {
     path: '/favoritos/',
-    componentUrl: './pages/favoritos.html'
+    url: './pages/pedidos.html'
   },
 
   {

@@ -41,7 +41,6 @@ var settingsView = app.views.create('#view-settings', {
   url: '/settings/'
 });
 
-
 // Login Screen Demo
 $$('#my-login-screen .login-button').on('click', function () {
   var username = $$('#my-login-screen [name="username"]').val();
@@ -110,8 +109,8 @@ function actualizarListadoPremios(pTipoPremio, elList) {
 }
 
 
-$$(document).on('pageInit', '.page[data-page="premiosList"]', function (e) {
-
+$$(document).on('page:init', '.page[data-page="premiosList"]', function (e) {
+  
 });
 
 $$('.premios-icon').on('click', function () {
@@ -148,6 +147,7 @@ app.initialize = function () {
     false);
 };
 
+
 function onDeviceReady() {
   // Specify a shortcut for the location manager holding the iBeacon functions.
   window.locationManager = cordova.plugins.locationManager;
@@ -165,7 +165,6 @@ function startScan() {
 
   // Called continuously when ranging beacons.
   delegate.didRangeBeaconsInRegion = function (pluginResult) {
-    //console.log('didRangeBeaconsInRegion: ' + JSON.stringify(pluginResult))
     for (var i in pluginResult.beacons) {
       // Insert beacon into table of found beacons.
       var beacon = pluginResult.beacons[i];
