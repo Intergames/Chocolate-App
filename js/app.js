@@ -90,18 +90,9 @@ function actualizarListadoPremios(pTipoPremio, elList) {
         '</div>' +
         '<div class="row" style="margin-top: -35px;">' +
         '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
-        '<p style="color: black;">Cantidad</p>' +
-        '<div class="col">' +
-        '<div class="stepper stepper-init stepper-fill color-orange">' +
-        '<div class="stepper-button-minus"></div>' +
-        '<div class="stepper-input-wrap">' +
-        '<input type="text" value="1" min="1" max="1" step="1" readonly>' +
-        '</div>' +
-        '<div class="stepper-button-plus"></div>' +
         '</div>' +
         '</div>' +
-        '</div>' +
-        '<div class="col-50 tablet-50" style="margin-top: 53px;"><img src="" alt="" title="" width="99%"/>' +
+        '<div class="col-50 tablet-50" style="margin-top: 3px;"><img src="" alt="" title="" width="99%"/>' +
         '<a href="/detallePremio/Id/{{IdPremio}}/TipoPremio/{{TipoPremio}}/" class="button button-small button-fill button-raised color-green link" @click="showToastCenter">Agregar a pedido</a>' +
         '</div>' +
         '</div>' +

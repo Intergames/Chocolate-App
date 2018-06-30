@@ -15,16 +15,33 @@
 				<div class="block block-strong">
 					<img src="http://chocolateboutiquemotel.com/demoapp/images/{{premio.imgPremio}}" style="width: 100%"/>
 				</div>
-				<div class="block block-strong">
-					{{premio.Premio}}
+				<div class="row" style="margin-top: -35px;">
+					<div class="col-70 tablet-30">
+						<div class="block block-strong">
+							{{premio.Premio}} - {{premio.Descripcion}}
+						</div>
+					</div>
+					<div class="col-30 tablet-70">
+						<div class="block block-strong">
+							{{premio.Puntos}} Puntos
+						</div>
+					</div>
 				</div>
-				<div class="block block-strong">
-					{{premio.Puntos}}
+				<div class="block" style="margin-top: -35px;">
+					<center>Cantidad:</center><br>
+					<center>
+						<div class="stepper stepper-init stepper-fill color-orange">
+							<div class="stepper-button-minus"></div>
+							<div class="stepper-input-wrap">
+								<input type="text" value="1" min="1" max="{{premio.CanjeMaximo}}" step="1" readonly>
+							</div>
+							<div class="stepper-button-plus"></div>
+						</div>
+					</center>	
 				</div>
 				<div class="block block-strong">
 					<a href="/detallePremio/IdPremio/{{premio.IdPremio}}/TipoPremio/{{premio.TipoPremio}}/" class="button button-small button-fill button-raised color-green">Agregar a pedido</a>
 				</div>
-			</div>
     </div>
 </template>
 <!-- <script>

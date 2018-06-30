@@ -51,6 +51,7 @@ routes = [
 
             if (Premio1 == "" && Premio2 == "")
             { // Como está vacias esas variables, significa que es el primer elemento que eligen.
+              $$('.iconito').text("1");
               localStorage.setItem("Premio1", info.Premio);
               localStorage.setItem("Puntaje1", info.Puntos);
               elemento.push({
@@ -60,12 +61,11 @@ routes = [
             }
             else if (Premio1 != "" && Premio2 == "")
             {
-              
+              $$('.iconito').text("2");
               var PremioAnterior = localStorage.getItem("Premio1");
               var PuntajeAnterior = localStorage.getItem("Puntaje1");
               localStorage.setItem("Premio2", info.Premio);
               localStorage.setItem("Puntaje2", info.Puntos);
-              
               elemento.push({
                 Premio: PremioAnterior,
                 Puntos: PuntajeAnterior
@@ -77,7 +77,7 @@ routes = [
             }
             else if(Premio1 != "" && Premio2!= "")
             {
-              app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo");
+              app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo","Advertencia");
               elemento.push({
                 Premio: Premio1,
                 Puntos: Puntaje1
@@ -174,7 +174,7 @@ routes = [
 
   {
     path: '/favoritos/',
-    url: './pages/pedidos.html'
+    url: './pages/about.html'
   },
 
   {
