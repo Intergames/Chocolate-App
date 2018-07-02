@@ -18,7 +18,7 @@ $$('.open-login').on('click', function () {
           psswrd: password
         }, function (data) {
           var info = JSON.parse(data);
-          // app.dialog.alert("Puntos Acumulados: " + info.Puntos);
+          app.popup.close(".demo-login",true);
           localStorage.setItem("PuntajeUsuario", info.Puntos);
         });
     });
@@ -35,11 +35,8 @@ $$('.btn-registrar').on('click', function () {
     app.dialog.alert(data, "Registro de usuarios");
   });
 });
+
 // Init/Create views
-localStorage.setItem("Premio1","");
-localStorage.setItem("Puntaje1","");
-localStorage.setItem("Premio2","");
-localStorage.setItem("Puntaje2","");
 var homeView = app.views.create('#view-home', {
   url: '/'
 });
@@ -48,26 +45,15 @@ var premiosView = app.views.create('#view-premios', {
   url: '/premios/'
 });
 
-var favoritosView = app.views.create('#view-favoritos', {
-  url: '/favoritos/'
+var vistaCarrito = app.views.create('#view-carrito', {
+  url: '/carrito/'
 });
+
+
 var settingsView = app.views.create('#view-settings', {
   url: '/settings/'
 });
 
-
-
-// Login Screen Demo
-$$('#my-login-screen .login-button').on('click', function () {
-  var username = $$('#my-login-screen [name="username"]').val();
-  var password = $$('#my-login-screen [name="password"]').val();
-
-  // Close login screen
-  app.loginScreen.close('#my-login-screen');
-
-  // Alert username and password
-  app.dialog.alert('Username: ' + username + '<br>Password: ' + password);
-});
 
 var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
 
@@ -92,6 +78,15 @@ function calcularPuntajePedido()
     Puntaje2 = 0;
   var PuntajePedido = parseFloat(Puntaje1) + parseFloat(Puntaje2);
   return PuntajePedido;
+}
+
+function limpiarLocalStorage()
+{
+  localStorage.setItem("Premio1", "");
+  localStorage.setItem("Puntaje1", "");
+  localStorage.setItem("Premio2", "");
+  localStorage.setItem("Puntaje2", "");
+  console.log("Se limpiaron las variables globales");
 }
 
 function actualizarBadge(action)
@@ -179,7 +174,7 @@ function onDeviceReady() {
   window.locationManager = cordova.plugins.locationManager;
   // Start tracking beacons!
   startScan();
-
+  
   // Display refresh timer.
   updateTimer = setInterval(displayBeaconList, 500);
 }

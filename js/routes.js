@@ -1,7 +1,17 @@
 routes = [
   {
     path: '/',
-    url: './index.html'
+    url: './index.html',
+    name: 'principal',
+    on:{
+      pageInit: function (event,page) {
+        if (page.route.name == 'principal')
+        {
+          limpiarLocalStorage();
+          app.popup.open(".demo-login", false);
+        }
+      }
+    }
   },
   {
     path: '/puntaje/',
@@ -18,9 +28,105 @@ routes = [
   },
   {
     path: '/carrito/',
-    url: './pages/pedidos.html'
-  },
+    name: 'carrito',
+    componentUrl: './pages/carrito.html',
+    on: {
+      pageInit: function (event, page) {
+        console.log(event);
+        var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+        $$('.PuntajeUsuarioCarrito').text(vPuntajeUsuario);
+          var elemento = [];
+          var Premio1 = localStorage.getItem("Premio1");
+          var Puntaje1 = localStorage.getItem("Puntaje1");
+          var Premio2 = localStorage.getItem("Premio2");
+          var Puntaje2 = localStorage.getItem("Puntaje2");
+          console.log("Estamos viendo el premio1 guardado: " + Premio1);
+          if (Premio1 == "" && Premio2 == "") { // Como está vacias esas variables, significa que es el primer elemento que eligen.
+            $$('.iconito').text("0");
+          } else if (Premio1 != "" && Premio2 == "") {
+            $$('.iconito').text("1");
+            var Premio1 = localStorage.getItem("Premio1");
+            var Puntaje1 = localStorage.getItem("Puntaje1");
+            elemento.push({
+              Premio: Premio1,
+              Puntos: Puntaje1
+            })
+          } else if (Premio1 != "" && Premio2 != "") {
+            app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo", "Advertencia");
+            elemento.push({
+              Premio: Premio1,
+              Puntos: Puntaje1
+            })
+            elemento.push({
+              Premio: Premio2,
+              Puntos: Puntaje2
+            })
+          }
+          // Calculamos la suma de puntos de de ambos elementos
+          var PuntajePedido = calcularPuntajePedido();
+          console.log("Puntaje del carrito: " + PuntajePedido);
+          $$('.SumaPuntosCarrito').text(PuntajePedido);
+          if (PuntajePedido > vPuntajeUsuario) {
+            $$('.AlertaCarrito').text("No tienes puntos suficientes para este canje.");
+            $$('.carrito-canje').addClass("disabled");
+          } else {
+            $$('.carrito-canje').removeClass("disabled");
+          }
 
+          app.virtualList.create({
+            // List Element
+            el: '.carrito-list',
+            // Pass array with items
+            items: elemento,
+            // List item Template7 template
+            itemTemplate: '<li class="swipeout deleted-callback">' +
+              '<a href="#" class="item-link item-content swipeout-content">' +
+              '<div class="item-inner">' +
+              '<div class="item-title-row">' +
+              '<div class="item-title">{{Premio}}</div>' +
+              '</div>' +
+              '<div class="item-subtitle">{{Puntos}}</div>' +
+              '</div>' +
+              '<div class="swipeout-actions-right">' +
+              '<a href="#" class="swipeout-delete">Borrar</a>' +
+              '</div>' +
+              '</a>' +
+              '</li>',
+            // Item height
+            // height: app.theme === 'ios' ? 63 : 73,
+          });
+
+          $$('.deleted-callback').on('swipeout:deleted', function (e) {
+            // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
+            var posicion = e.target.f7VirtualListIndex;
+            if (posicion == 0) // Eliminaron el primer elemento de la lista
+            {
+              // vamos a pasar el premio2 al premio1 y limpiar premios2
+              var Premio2 = localStorage.getItem("Premio2");
+              var Puntaje2 = localStorage.getItem("Puntaje2");
+              localStorage.setItem("Premio1", Premio2);
+              localStorage.setItem("Puntaje1", Puntaje2);
+              localStorage.setItem("Premio2", "");
+              localStorage.setItem("Puntaje2", "");
+            } else //Eliminaros el segundo elemento de la lista
+            {
+              localStorage.setItem("Premio2", "");
+              localStorage.setItem("Puntaje2", "");
+            }
+            var PuntajePedido = calcularPuntajePedido();
+            $$('.SumaPuntos').text(PuntajePedido);
+            if (PuntajePedido > vPuntajeUsuario) {
+              $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+              $$('.pedido-canje').addClass("disabled");
+            } else {
+              $$('.pedido-canje').removeClass("disabled");
+              $$('.AlertaPedido').text("");
+            }
+            actualizarBadge("menos");
+          });
+      }
+    }
+  },
   {
     path: '/premios/',
     name: 'premios',
@@ -113,9 +219,7 @@ routes = [
             app.virtualList.create({
               // List Element
               el: '.pedidos-list',
-              // Pass array with items
               items: elemento,          
-              // List item Template7 template
               itemTemplate: 
               '<li class="swipeout deleted-callback">' +
                 '<a href="#" class="item-link item-content swipeout-content">' +
@@ -217,12 +321,6 @@ routes = [
     path: '/product/:id/',
     componentUrl: './pages/product.html'
   },
-
-  {
-    path: '/favoritos/',
-    url: './pages/about.html'
-  },
-
   {
     path: '/settings/',
     url: './pages/settings.html'
