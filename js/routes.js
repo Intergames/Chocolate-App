@@ -3,12 +3,19 @@ routes = [
     path: '/',
     url: './index.html'
   },
-
   {
-    path: '/about/',
-    url: './pages/about.html'
+    path: '/puntaje/',
+    name: 'puntaje',
+    url: './pages/puntaje.html',
+    on: {
+      pageInit: function (event, page) {
+        if (page.route.name == 'puntaje') {
+          var PuntajeUsuario = localStorage.getItem("PuntajeUsuario")
+          $$('.PuntajeUsuario').text(PuntajeUsuario);
+        }
+      }
+    }
   },
-
   {
     path: '/carrito/',
     url: './pages/pedidos.html'
@@ -39,6 +46,8 @@ routes = [
          if (page.route.name == 'pedido') {
            var vIdPremio = localStorage.getItem("IdPremioGlobal");
            var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
+           var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+           $$('.PuntajeUsuarioPedido').text(vPuntajeUsuario);
            // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
            var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
            app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
@@ -88,34 +97,71 @@ routes = [
               })
             }      
             // Calculamos la suma de puntos de de ambos elementos
-            var Premio1 = localStorage.getItem("Premio1");
-            var Puntaje1 = localStorage.getItem("Puntaje1");
-            var Premio2 = localStorage.getItem("Premio2");
-            var Puntaje2 = localStorage.getItem("Puntaje2");
-            if (Puntaje1 == "")
-              Puntaje1 = 0;
-            if (Puntaje2 == "")
-              Puntaje2 = 0;
-            var PuntajePedido = parseFloat(Puntaje1) + parseFloat(Puntaje2);
+            
+            var PuntajePedido = calcularPuntajePedido();
             $$('.SumaPuntos').text(PuntajePedido);
+            if (PuntajePedido > vPuntajeUsuario)
+            {
+              $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+              $$('.pedido-canje').addClass("disabled");
+            }
+            else
+            {
+              $$('.pedido-canje').removeClass("disabled");
+            }  
+
             app.virtualList.create({
               // List Element
               el: '.pedidos-list',
               // Pass array with items
               items: elemento,          
               // List item Template7 template
-              itemTemplate: '<li>' +
-                '<a href="#" class="item-link item-content">' +
-                '<div class="item-inner">' +
-                '<div class="item-title-row">' +
-                '<div class="item-title">{{Premio}}</div>' +
-                '</div>' +
-                '<div class="item-subtitle">{{Puntos}}</div>' +
-                '</div>' +
+              itemTemplate: 
+              '<li class="swipeout deleted-callback">' +
+                '<a href="#" class="item-link item-content swipeout-content">' +
+                  '<div class="item-inner">' +
+                    '<div class="item-title-row">' +
+                      '<div class="item-title">{{Premio}}</div>' +
+                    '</div>' +
+                  '<div class="item-subtitle">{{Puntos}}</div>' +
+                  '</div>' +
+                  '<div class="swipeout-actions-right">' +
+                    '<a href="#" class="swipeout-delete">Borrar</a>' +
+                  '</div>' +
                 '</a>' +
-                '</li>',
+              '</li>',
               // Item height
-              height: app.theme === 'ios' ? 63 : 73,
+              // height: app.theme === 'ios' ? 63 : 73,
+            });
+            
+            $$('.deleted-callback').on('swipeout:deleted', function (e) {
+              // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
+              var posicion = e.target.f7VirtualListIndex;
+              if (posicion == 0) // Eliminaron el primer elemento de la lista
+              {
+                // vamos a pasar el premio2 al premio1 y limpiar premios2
+                var Premio2 = localStorage.getItem("Premio2");
+                var Puntaje2 = localStorage.getItem("Puntaje2");
+                localStorage.setItem("Premio1",Premio2); 
+                localStorage.setItem("Puntaje1",Puntaje2); 
+                localStorage.setItem("Premio2",""); 
+                localStorage.setItem("Puntaje2",""); 
+              }
+              else //Eliminaros el segundo elemento de la lista
+              {
+                localStorage.setItem("Premio2", "");
+                localStorage.setItem("Puntaje2", "");
+              }
+              var PuntajePedido = calcularPuntajePedido();
+              $$('.SumaPuntos').text(PuntajePedido);
+              if (PuntajePedido > vPuntajeUsuario) {
+                $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+                $$('.pedido-canje').addClass("disabled");
+              } else {
+                $$('.pedido-canje').removeClass("disabled");
+                $$('.AlertaPedido').text("");
+              }
+              actualizarBadge("menos");
             });
           });
         }

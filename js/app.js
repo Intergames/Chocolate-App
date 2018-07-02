@@ -12,7 +12,17 @@ $$('.open-login').on('click', function () {
   app.dialog.login('Ingresa tu nombre de usuario y contraseña', 'INICIAR SESION', function (username, password) {
     app.request.post(serviceURL + "login.php", { username: username, psswrd: password }, function (data) {
       app.dialog.alert(data, "Inicio de sesión");
+      localStorage.setItem("PuntajeUsuario",data.Puntos);
+        app.request.post(serviceURL + "consultarPuntaje.php", {
+          username: username,
+          psswrd: password
+        }, function (data) {
+          var info = JSON.parse(data);
+          // app.dialog.alert("Puntos Acumulados: " + info.Puntos);
+          localStorage.setItem("PuntajeUsuario", info.Puntos);
+        });
     });
+    // Consultamos y almacenamos los puntos acumulados por el usuario
   });
 });
 
@@ -45,6 +55,8 @@ var settingsView = app.views.create('#view-settings', {
   url: '/settings/'
 });
 
+
+
 // Login Screen Demo
 $$('#my-login-screen .login-button').on('click', function () {
   var username = $$('#my-login-screen [name="username"]').val();
@@ -70,6 +82,32 @@ function esNumero(numero) {
   return bandera;
 }
 
+function calcularPuntajePedido()
+{
+  var Puntaje1 = localStorage.getItem("Puntaje1");
+  var Puntaje2 = localStorage.getItem("Puntaje2");
+  if (Puntaje1 == "")
+    Puntaje1 = 0;
+  if (Puntaje2 == "")
+    Puntaje2 = 0;
+  var PuntajePedido = parseFloat(Puntaje1) + parseFloat(Puntaje2);
+  return PuntajePedido;
+}
+
+function actualizarBadge(action)
+{
+ var cuantos = $$('.iconito').text();
+ if (action=="mas")
+ {
+  // Consultamos el badge
+  var cuantos = $$('.iconito').text(parseInt(cuantos) + 1);
+}
+else if (action == "menos")
+{
+  var cuantos = $$('.iconito').text(parseInt(cuantos) - 1);
+ }
+}
+
 function actualizarListadoPremios(pTipoPremio, elList) {
   app.request.post(serviceURL + "listadoPremios.php", { TipoPremio: pTipoPremio }, function (data) {
     app.preloader.show();
@@ -77,7 +115,8 @@ function actualizarListadoPremios(pTipoPremio, elList) {
     app.virtualList.create({
       el: elList,
       items: conversion,
-      itemTemplate: '<div class="card demo-card-header-pic" style="background-color: #ffffff;">' +
+      itemTemplate: 
+      '<div class="card demo-card-header-pic" style="background-color: #ffffff;">' +
         '<div style="background-image:url(http://chocolateboutiquemotel.com/demoapp/images/{{imgPremio}})" class="card-header align-items-flex-end"></div>' +
         '<div class="card-content card-content-padding">' +
         '<div class="row" style="margin-top: -35px;">' +
@@ -97,7 +136,7 @@ function actualizarListadoPremios(pTipoPremio, elList) {
         '</div>' +
         '</div>' +
         '</div>' +
-        '</div>'
+        '</div>' 
     });
     app.preloader.hide();
   }); 
