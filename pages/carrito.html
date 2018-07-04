@@ -1,35 +1,38 @@
 <template>
-<div class="page" data-name="carrito">
-	<div class="navbar">
-		<div class="navbar-inner sliding">
-			<div class="left">
-				<!-- <a href="#" class="back link">
-					<i class="icon icon-back"></i>
-				</a> -->
+	<div class="page" data-name="carrito">
+		<div class="navbar">
+			<div class="navbar-inner sliding">
+				<div class="left">
+					<!-- <a href="#" class="back link">
+						<i class="icon icon-back"></i>
+					</a> -->
+				</div>
+				<div class="title">Canje de Premio</div>
 			</div>
-			<div class="title">Canje de Premio</div>
+		</div>
+		<div class="page-content">
+			<div class="block">
+				<p>Su pedido puede tener un máximo de 2 articulos por caje.</p>
+				<p>Solo se permite un caje al día</p>
+				<p>Sus puntos:
+					<span id="PuntajeUsuarioCarrito" class="PuntajeUsuarioCarrito"></span>
+				</p>
+				<div class="list virtual-list carrito-list">
+					
+				</div>
+				Puntos de este canje:
+				<span id="SumaPuntosCarrito" class="SumaPuntos">
+					
+				</span>
+				<center>
+					<span id="AlertaCarrito" class="AlertaCarrito">
+					</span>
+				</center>
+				
+				<center>
+					<a href="#" class="button button-small button-fill button-raised color-green carrito-canje">Pedir canje de premio</a>
+				</center>
+			</div>
 		</div>
 	</div>
-	<div class="page-content">
-		<p>Su pedido puede tener un máximo de 2 articulos por caje.</p>
-		<p>Solo se permite un caje al día</p>
-		<p>Sus puntos:
-			<span id="PuntajeUsuarioCarrito" class="PuntajeUsuarioCarrito"></span>
-		</p>
-		<div class="list virtual-list carrito-list">
-
-		</div>
-		Puntos de este canje:
-		<span id="SumaPuntosCarrito" class="SumaPuntos">
-
-		</span>
-		<center>
-			<span id="AlertaCarrito" class="AlertaCarrito">
-			</span>
-		</center>
-		<center>
-			<a href="#" class="button button-small button-fill button-raised color-green carrito-canje">Pedir canje de premio</a>
-		</center>
-	</div>
-</div>
 </template>

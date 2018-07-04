@@ -5,6 +5,9 @@ var app = new Framework7({
   id: 'io.framework7.testapp', 
   name: 'Framework7', 
   theme: 'auto', 
+  popup: {
+    closeByBackdropClick: false,
+  },
   routes: routes,
 });
 
@@ -34,6 +37,11 @@ $$('.btn-registrar').on('click', function () {
   app.request.post(serviceURL + "insertarUsuario.php", { username: vnombreRegistro, psswrd: vpassRegistro, email: vemaiRegistro }, function (data) {
     app.dialog.alert(data, "Registro de usuarios");
   });
+});
+
+$$('.cerrar-sesion').on('click', function () {
+  limpiarLocalStorage();
+  app.popup.open(".demo-login", true);
 });
 
 // Init/Create views
@@ -68,15 +76,45 @@ function esNumero(numero) {
   return bandera;
 }
 
+function validarPuntajePremioActual()
+{
+  var Cantidad = parseInt(app.stepper.getValue('.stepper-pedido'));
+  var PuntosActuales = parseInt(localStorage.getItem("PuntosPremioActual"));
+  var PuntajeUsuario = parseInt(localStorage.getItem("PuntajeUsuario"));
+  if (PuntajeUsuario < (Cantidad * PuntosActuales)) {
+    // app.dialog.alert("Actualmente usted cuenta con " + PuntajeUsuario + " Por lo que no son suficientes para agregar este articulo a su pedido.");
+    var mitostadita = app.toast.create({
+      // icon: app.theme === 'ios' ? '<i class="f7-icons">warning</i>' : '<i class="material-icons">warning</i>',
+      text: "Actualmente usted cuenta con " + PuntajeUsuario + " puntos, por lo que no son suficientes para agregar este permio a su canje.",
+      position: 'bottom',
+      closeButton: true,
+      closeButtonText: 'Ni pedo',
+      closeButtonColor: 'orange',
+      closeTimeout: 6000,
+    });
+    mitostadita.open();
+    $$('.btn-agregar-pedido').addClass("disabled");
+  } else {
+    $$('.btn-agregar-pedido').removeClass("disabled");
+  }
+  $$('.puntos-premio').text(Cantidad * PuntosActuales + " Puntos");
+}
+
 function calcularPuntajePedido()
 {
   var Puntaje1 = localStorage.getItem("Puntaje1");
+  var Cantidad1 = localStorage.getItem("Cantidad1");
   var Puntaje2 = localStorage.getItem("Puntaje2");
+  var Cantidad2 = localStorage.getItem("Cantidad2");
   if (Puntaje1 == "")
     Puntaje1 = 0;
+  if (Cantidad1 == "")
+    Cantidad1 = 1;
   if (Puntaje2 == "")
     Puntaje2 = 0;
-  var PuntajePedido = parseFloat(Puntaje1) + parseFloat(Puntaje2);
+  if (Cantidad2 == "")
+    Cantidad1 = 1;
+  var PuntajePedido = parseFloat(Cantidad1 * Puntaje1) + parseFloat(Cantidad2 * Puntaje2);
   return PuntajePedido;
 }
 
@@ -84,9 +122,16 @@ function limpiarLocalStorage()
 {
   localStorage.setItem("Premio1", "");
   localStorage.setItem("Puntaje1", "");
+  localStorage.setItem("Cantidad1", "");
   localStorage.setItem("Premio2", "");
   localStorage.setItem("Puntaje2", "");
-  console.log("Se limpiaron las variables globales");
+  localStorage.setItem("Cantidad2", "");
+  localStorage.setItem("PuntajeUsuario", "");
+  localStorage.setItem("IdPremioGlobal", "");
+  localStorage.setItem("TipoPremioGlobal","");
+  localStorage.setItem("PuntosPremioActual", "");
+  // console.log("Se limpiaron las variables globales");
+  $$('.iconito').text("0");
 }
 
 function actualizarBadge(action)
@@ -105,7 +150,6 @@ else if (action == "menos")
 
 function actualizarListadoPremios(pTipoPremio, elList) {
   app.request.post(serviceURL + "listadoPremios.php", { TipoPremio: pTipoPremio }, function (data) {
-    app.preloader.show();
     var conversion = JSON.parse(data);
     app.virtualList.create({
       el: elList,
@@ -128,12 +172,11 @@ function actualizarListadoPremios(pTipoPremio, elList) {
         '</div>' +
         '<div class="col-50 tablet-50" style="margin-top: 3px;"><img src="" alt="" title="" width="99%"/>' +
         '<a href="/detallePremio/Id/{{IdPremio}}/TipoPremio/{{TipoPremio}}/" class="button button-small button-fill button-raised color-green link" @click="showToastCenter">Agregar a pedido</a>' +
-        '</div>' +
+        '</div>' + 
         '</div>' +
         '</div>' +
         '</div>' 
     });
-    app.preloader.hide();
   }); 
 }
 
@@ -149,6 +192,9 @@ var regions =
 var notificationID = 0;
 var inBackground = false;
 
+$$('.premios-icon').on('click', function () {
+  actualizarListadoPremios('Habitacion', '.habitaciones-list');
+});
 
 document.addEventListener('pause', function () { inBackground = true });
 document.addEventListener('resume', function () { inBackground = false });
@@ -167,7 +213,6 @@ app.initialize = function () {
     },
     false);
 };
-
 
 function onDeviceReady() {
   // Specify a shortcut for the location manager holding the iBeacon functions.

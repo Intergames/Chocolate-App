@@ -23,14 +23,16 @@
 					</div>
 					<div class="col-30 tablet-70">
 						<div class="block block-strong">
-							{{premio.Puntos}} Puntos
+							<div class="puntos-premio">
+								{{premio.Puntos}} Puntos
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="block" style="margin-top: -35px;">
 					<center>Cantidad:</center><br>
 					<center>
-						<div class="stepper stepper-init stepper-fill color-orange">
+						<div class="stepper stepper-init stepper-fill color-orange stepper-pedido">
 							<div class="stepper-button-minus"></div>
 							<div class="stepper-input-wrap">
 								<input type="text" value="1" min="1" max="{{premio.CanjeMaximo}}" step="1" readonly>
@@ -40,7 +42,7 @@
 					</center>	
 				</div>
 				<div class="block block-strong">
-					<a href="/detallePremio/IdPremio/{{premio.IdPremio}}/TipoPremio/{{premio.TipoPremio}}/" class="button button-small button-fill button-raised color-green">Agregar a pedido</a>
+<a href="/detallePremio/IdPremio/{{premio.IdPremio}}/TipoPremio/{{premio.TipoPremio}}/" class="button button-small button-fill button-raised btn-agregar-pedido color-green">Agregar a pedido</a>
 				</div>
     </div>
 </template>

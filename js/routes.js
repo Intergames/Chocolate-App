@@ -32,7 +32,6 @@ routes = [
     componentUrl: './pages/carrito.html',
     on: {
       pageInit: function (event, page) {
-        console.log(event);
         var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
         $$('.PuntajeUsuarioCarrito').text(vPuntajeUsuario);
           var elemento = [];
@@ -40,7 +39,6 @@ routes = [
           var Puntaje1 = localStorage.getItem("Puntaje1");
           var Premio2 = localStorage.getItem("Premio2");
           var Puntaje2 = localStorage.getItem("Puntaje2");
-          console.log("Estamos viendo el premio1 guardado: " + Premio1);
           if (Premio1 == "" && Premio2 == "") { // Como está vacias esas variables, significa que es el primer elemento que eligen.
             $$('.iconito').text("0");
           } else if (Premio1 != "" && Premio2 == "") {
@@ -64,7 +62,6 @@ routes = [
           }
           // Calculamos la suma de puntos de de ambos elementos
           var PuntajePedido = calcularPuntajePedido();
-          console.log("Puntaje del carrito: " + PuntajePedido);
           $$('.SumaPuntosCarrito').text(PuntajePedido);
           if (PuntajePedido > vPuntajeUsuario) {
             $$('.AlertaCarrito').text("No tienes puntos suficientes para este canje.");
@@ -133,26 +130,24 @@ routes = [
     componentUrl: './pages/premios.html',
     on: {
       pageInit: function (event, page) {
-        if (page.route.name=='premios')
-        {
-          actualizarListadoPremios('Habitacion', '.habitaciones-list');
-          actualizarListadoPremios('Barra', '.snack-list');
-          actualizarListadoPremios('Cocina', '.cocina-list');
-          actualizarListadoPremios('SexShop', '.sexshop-list');
-        }
+         actualizarListadoPremios('Habitacion', '.habitaciones-list');
+         actualizarListadoPremios('Barra', '.snack-list');
+         actualizarListadoPremios('Cocina', '.cocina-list');
+         actualizarListadoPremios('SexShop', '.sexshop-list');
       }
     }
   },
   // Agregar un elemento a la lista de pedidos
   {
     path: '/detallePremio/IdPremio/:IdPremio/TipoPremio/:TipoPremio/',
-    name: 'pedido' ,
+    name: 'pedido',
     on: {
       pageInit: function (event, page) {
          if (page.route.name == 'pedido') {
            var vIdPremio = localStorage.getItem("IdPremioGlobal");
            var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
            var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+           var cantidad = app.stepper.getValue('.stepper-pedido');
            $$('.PuntajeUsuarioPedido').text(vPuntajeUsuario);
            // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
            var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
@@ -160,46 +155,51 @@ routes = [
             var info = JSON.parse(data);
             var elemento =[];
             var Premio1 = localStorage.getItem("Premio1");
-            var Puntaje1 = localStorage.getItem("Puntaje1");
+            var Puntaje1 = parseInt(localStorage.getItem("Puntaje1"));
+            var Cantidad1 = parseInt(localStorage.getItem("Cantidad1"));
             var Premio2 = localStorage.getItem("Premio2");
-            var Puntaje2 = localStorage.getItem("Puntaje2");
+            var Puntaje2 = parseInt(localStorage.getItem("Puntaje2"));
+            var Cantidad2 = parseInt(localStorage.getItem("Cantidad2"));
 
-            if (Premio1 == "" && Premio2 == "")
-            { // Como está vacias esas variables, significa que es el primer elemento que eligen.
+            if (Premio1 == "" && Premio2 == "") // Como está vacias esas variables, significa que es el primer elemento que eligen.
+            { 
               $$('.iconito').text("1");
               localStorage.setItem("Premio1", info.Premio);
-              localStorage.setItem("Puntaje1", info.Puntos);
+              localStorage.setItem("Puntaje1", info.Puntos * cantidad);
+              localStorage.setItem("Cantidad1", cantidad);
               elemento.push({
-                Premio: info.Premio,
-                Puntos: info.Puntos
+                Premio: cantidad + " x " + info.Premio,
+                Puntos: cantidad * info.Puntos
               })
             }
-            else if (Premio1 != "" && Premio2 == "")
-            {
+            else if (Premio1 != "" && Premio2 == "") // Es el segudo elemento que insertan
+            { 
               $$('.iconito').text("2");
               var PremioAnterior = localStorage.getItem("Premio1");
               var PuntajeAnterior = localStorage.getItem("Puntaje1");
+              var CantidadAnterior = localStorage.getItem("Cantidad1");
               localStorage.setItem("Premio2", info.Premio);
               localStorage.setItem("Puntaje2", info.Puntos);
+              localStorage.setItem("Cantidad2", cantidad);
               elemento.push({
-                Premio: PremioAnterior,
-                Puntos: PuntajeAnterior
+                Premio: CantidadAnterior + " x " + PremioAnterior,
+                Puntos: CantidadAnterior * PuntajeAnterior
               })
               elemento.push({
-                Premio: info.Premio,
-                Puntos: info.Puntos
+                Premio: cantidad + " x " + info.Premio,
+                Puntos: cantidad * info.Puntos
               })
             }
             else if(Premio1 != "" && Premio2!= "")
             {
               app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo","Advertencia");
               elemento.push({
-                Premio: Premio1,
-                Puntos: Puntaje1
+                Premio: Cantidad1 + " x " + Premio1,
+                Puntos: Cantidad1 * Puntaje1
               })
               elemento.push({
-                Premio: Premio2,
-                Puntos: Puntaje2
+                Premio: Cantidad2 + " x " + Premio2,
+                Puntos: Cantidad2 * Puntaje2
               })
             }      
             // Calculamos la suma de puntos de de ambos elementos
@@ -288,6 +288,14 @@ routes = [
   },
   {
     path: '/detallePremio/Id/:idPremio/TipoPremio/:TipoPremio/',
+    on:{
+      // Cambiamos el puntaje que se muestra en el detalle del premio en base a la cantidad elegida por el usuario
+      pageInit: function (e){
+        $$('.stepper-pedido').on('stepper:change', function (e) {
+          validarPuntajePremioActual();  
+        });
+      }
+    },
     async: function (routeTo, routeFrom, resolve, reject) {
       var router = this;
       var app = router.app;
@@ -297,6 +305,7 @@ routes = [
       var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
       app.request.post(serviceURL + "detallePremio.php", {IdPremio: vIdPremio, TipoPremio : vTipoPremio } , function (data) { 
         var info = JSON.parse(data);
+        localStorage.setItem("PuntosPremioActual",info.Puntos);
         app.preloader.hide();
         resolve(
           {
@@ -311,7 +320,6 @@ routes = [
       });  
     },
   },
-
   {
     path: '/cambiarpass/',
     componentUrl: './pages/cambiarpass.html'
