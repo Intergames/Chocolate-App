@@ -21,6 +21,7 @@ $$('.open-login').on('click', function () {
           psswrd: password
         }, function (data) {
           var info = JSON.parse(data);
+          localStorage.setItem("IdUsuario",info.IdUsuario);
           app.popup.close(".demo-login",true);
           localStorage.setItem("PuntajeUsuario", info.Puntos);
         });
@@ -76,6 +77,20 @@ function esNumero(numero) {
   return bandera;
 }
 
+function insertarPedido()
+{
+  //Tomamos los elementos de localstorage y los mandamos con post
+  var IdUsuario = localStorage.getItem("IdUsuario");
+  var Cantidad1 = localStorage.getItem("Cantidad1");  
+  var Tipo1 = localStorage.getItem("Tipo1");  
+  var Premio1 = localStorage.getItem("Premio1");    
+  var Cantidad2 = localStorage.getItem("Cantidad2");  
+  var Tipo2 = localStorage.getItem("Tipo2");  
+  var Premio2 = localStorage.getItem("Premio2");
+
+
+}
+
 function validarPuntajePremioActual()
 {
   var Cantidad = parseInt(app.stepper.getValue('.stepper-pedido'));
@@ -88,7 +103,7 @@ function validarPuntajePremioActual()
       text: "Actualmente usted cuenta con " + PuntajeUsuario + " puntos, por lo que no son suficientes para agregar este permio a su canje.",
       position: 'bottom',
       closeButton: true,
-      closeButtonText: 'Ni pedo',
+      closeButtonText: 'Ok',
       closeButtonColor: 'orange',
       closeTimeout: 6000,
     });
