@@ -87,7 +87,7 @@ function insertarPedido()
   var Cantidad2 = localStorage.getItem("Cantidad2");  
   var Tipo2 = localStorage.getItem("Tipo2");  
   var Premio2 = localStorage.getItem("Premio2");
-
+  
 
 }
 
