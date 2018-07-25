@@ -8,6 +8,9 @@ routes = [
         if (page.route.name == 'principal')
         {
           limpiarLocalStorage();
+          // window.locationManager = cordova.plugins.locationManager;
+          // startScan();
+          updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
         }
       }
@@ -30,6 +33,52 @@ routes = [
     path: '/carrito/',
     name: 'carrito',
     componentUrl: './pages/carrito.html',
+    on:{
+      pageInit: function (e,page) {
+        $$('.carrito-list').on('swipeout:deleted', function (e) {
+          // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
+          var posicion = e.target.f7VirtualListIndex;
+          app.dialog.alert("Eliminaste el elemento " + posicion);
+          var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+          if (posicion == 0) // Eliminaron el primer elemento de la lista
+          {
+            // vamos a pasar el premio2 al premio1 y limpiar premios2
+            var Premio2 = localStorage.getItem("Premio2");
+            var TipoPremio2 = localStorage.getItem("TipoPremio2");
+            var Puntaje2 = localStorage.getItem("Puntaje2");
+            var Cantidad2 = localStorage.getItem("Cantidad2");
+            localStorage.setItem("Premio1", Premio2);
+            localStorage.setItem("TipoPremio1", TipoPremio2);
+            localStorage.setItem("Puntaje1", Puntaje2);
+            localStorage.setItem("Cantidad1", Cantidad2);
+            localStorage.setItem("Premio2", "");
+            localStorage.setItem("TipoPremio2", "");
+            localStorage.setItem("Puntaje2", "");
+            localStorage.setItem("Cantidad2", "");
+          } 
+          else //Eliminaros el segundo elemento de la lista
+          {
+            localStorage.setItem("Premio2", "");
+            localStorage.setItem("TipoPremio2", "");
+            localStorage.setItem("Puntaje2", "");
+            localStorage.setItem("Cantidad2", "");
+          }
+          var PuntajePedido = calcularPuntajePedido();
+          $$('.SumaPuntosCarrito').text(PuntajePedido);
+          if (PuntajePedido > PuntajeUsuario) {
+            $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+            $$('.carrito-canje').addClass("disabled");
+          } else {
+            $$('.carrito-canje').removeClass("disabled");
+            $$('.AlertaPedido').text("");
+          }
+          if (PuntajePedido == 0) {
+            $$('.carrito-canje').addClass("disabled");
+          }
+          actualizarBadge("menos");
+        });
+     }
+  }
   },
   {
     path: '/premios/',
@@ -51,6 +100,9 @@ routes = [
     on: {
       pageInit: function (event, page) {
          if (page.route.name == 'pedido') {
+           var PedidoHoy = ultimoPedido();
+           if (!PedidoHoy)
+           { 
            var vIdPremio = localStorage.getItem("IdPremioGlobal");
            var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
            var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
@@ -62,9 +114,11 @@ routes = [
             var info = JSON.parse(data);
             var elemento =[];
             var Premio1 = localStorage.getItem("Premio1");
+            var TipoPremio1 = localStorage.getItem("TipoPremio1");
             var Puntaje1 = parseInt(localStorage.getItem("Puntaje1"));
             var Cantidad1 = parseInt(localStorage.getItem("Cantidad1"));
             var Premio2 = localStorage.getItem("Premio2");
+            var TipoPremio2 = localStorage.getItem("TipoPremio2");
             var Puntaje2 = parseInt(localStorage.getItem("Puntaje2"));
             var Cantidad2 = parseInt(localStorage.getItem("Cantidad2"));
 
@@ -87,10 +141,11 @@ routes = [
                 })
               }
             }
-            if (Premio1 == "" && Premio2 == "") // Como está vacias esas variables, significa que es el primer elemento que eligen.
+            else if (Premio1 == "" && Premio2 == "")  // Como está vacias esas variables, significa que es el primer elemento que eligen.
             { 
               $$('.iconito').text("1");
               localStorage.setItem("Premio1", info.Premio);
+              localStorage.setItem("TipoPremio1", vTipoPremio);
               localStorage.setItem("Puntaje1", info.Puntos);
               localStorage.setItem("Cantidad1", Cantidad);
               elemento.push({
@@ -100,21 +155,41 @@ routes = [
             }
             else if (Premio1 != "" && Premio2 == "") // Es el segudo elemento que insertan
             { 
-              $$('.iconito').text("2");
-              var PremioAnterior = localStorage.getItem("Premio1");
-              var PuntajeAnterior = localStorage.getItem("Puntaje1");
-              var CantidadAnterior = localStorage.getItem("Cantidad1");
-              localStorage.setItem("Premio2", info.Premio);
-              localStorage.setItem("Puntaje2", info.Puntos);
-              localStorage.setItem("Cantidad2", Cantidad);
-              elemento.push({
-                Premio: CantidadAnterior + " x " + PremioAnterior,
-                Puntos: CantidadAnterior * PuntajeAnterior
-              })
-              elemento.push({
-                Premio: Cantidad + " x " + info.Premio,
-                Puntos: Cantidad * info.Puntos
-              })
+              console.log("vTipoPremio");
+              console.log(vTipoPremio);
+              console.log("TipoPremio");
+              console.log(TipoPremio1);
+              if (vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion") //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
+              {
+                app.dialog.alert("No pueden entregarse 2 habitaciones en un mismo canje, por favor elija un elemento diferente.", "Advertencia");
+                // Mostrarmos el elemento anterior en la lista.
+                var PremioAnterior = localStorage.getItem("Premio1");
+                var PuntajeAnterior = localStorage.getItem("Puntaje1");
+                var CantidadAnterior = localStorage.getItem("Cantidad1");
+                elemento.push({
+                  Premio: CantidadAnterior + " x " + PremioAnterior,
+                  Puntos: CantidadAnterior * PuntajeAnterior
+                })
+              } 
+              else 
+              {
+                $$('.iconito').text("2");
+                var PremioAnterior = localStorage.getItem("Premio1");
+                var PuntajeAnterior = localStorage.getItem("Puntaje1");
+                var CantidadAnterior = localStorage.getItem("Cantidad1");
+                localStorage.setItem("Premio2", info.Premio);
+                localStorage.setItem("TipoPremio2", vTipoPremio);
+                localStorage.setItem("Puntaje2", info.Puntos);
+                localStorage.setItem("Cantidad2", Cantidad);
+                elemento.push({
+                  Premio: CantidadAnterior + " x " + PremioAnterior,
+                  Puntos: CantidadAnterior * PuntajeAnterior
+                })
+                elemento.push({
+                  Premio: Cantidad + " x " + info.Premio,
+                  Puntos: Cantidad * info.Puntos
+                })
+              }
             }
             else if (Premio1 != "" && Premio2!= "")
             {
@@ -129,8 +204,7 @@ routes = [
               })
             }
 
-            // Calculamos la suma de puntos de de ambos elementos
-            
+            // Calculamos la suma de puntos de de ambos elementos            
             var PuntajePedido = calcularPuntajePedido();
             $$('.SumaPuntos').text(PuntajePedido);
             if (PuntajePedido == 0 )
@@ -176,22 +250,27 @@ routes = [
               {
                 // vamos a pasar el premio2 al premio1 y limpiar premios2
                 var Premio2 = localStorage.getItem("Premio2");
+                var TipoPremio2 = localStorage.getItem("TipoPremio2");
                 var Puntaje2 = localStorage.getItem("Puntaje2");
                 var Cantidad2 = localStorage.getItem("Cantidad2");
                 localStorage.setItem("Premio1",Premio2); 
+                localStorage.setItem("TipoPremio1",TipoPremio2); 
                 localStorage.setItem("Puntaje1",Puntaje2); 
                 localStorage.setItem("Cantidad1",Cantidad2); 
                 localStorage.setItem("Premio2",""); 
+                localStorage.setItem("TipoPremio2",""); 
                 localStorage.setItem("Puntaje2",""); 
                 localStorage.setItem("Cantidad2",""); 
               }
               else //Eliminaros el segundo elemento de la lista
               {
                 localStorage.setItem("Premio2", "");
+                localStorage.setItem("TipoPremio2", "");
                 localStorage.setItem("Puntaje2", "");
                 localStorage.setItem("Cantidad2", "");
               }
               var PuntajePedido = calcularPuntajePedido();
+
               $$('.SumaPuntos').text(PuntajePedido);
               if (PuntajePedido > vPuntajeUsuario) {
                 $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
@@ -206,7 +285,19 @@ routes = [
               }
               actualizarBadge("menos");
             });
+
+            $$('.pedido-canje').on('click', function () {
+              console.log("Clic en pedir caje");
+              realizarPedido('premios');
+              $$('.pedido-canje').addClass("disabled");
+            });
+          
           });
+          }
+          else
+          {
+            app.dialog.alert("Ya hiciste un pedido hoy, no te quieras pasar de verga");
+          }
         }
       }
     },

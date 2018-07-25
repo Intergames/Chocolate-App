@@ -2,8 +2,8 @@
 var $$ = Dom7;
 var app = new Framework7({
   root: '#app', 
-  id: 'io.framework7.testapp', 
-  name: 'Framework7', 
+  id: 'com.interlabs.chocolateboutiquemotel', 
+  name: 'Chocolate-App', 
   theme: 'auto', 
   popup: {
     closeByBackdropClick: false,
@@ -23,6 +23,7 @@ $$('.open-login').on('click', function () {
           var info = JSON.parse(data);
           app.popup.close(".demo-login",true);
           localStorage.setItem("PuntajeUsuario", info.Puntos);
+          localStorage.setItem("IdUsuario", info.IdUsuario);
         });
     });
     // Consultamos y almacenamos los puntos acumulados por el usuario
@@ -63,7 +64,7 @@ var settingsView = app.views.create('#view-settings', {
 });
 
 
-var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
 
 function esNumero(numero) {
   var bandera = false;
@@ -74,6 +75,34 @@ function esNumero(numero) {
     bandera = true;
   }
   return bandera;
+}
+
+function realizarPedido(vista)
+{
+  var IdSucursal = 1; 
+  var IdUsuario = localStorage.getItem("IdUsuario");
+  var Premio1 = localStorage.getItem("Premio1");
+  var Cantidad1 = localStorage.getItem("Cantidad1");
+  var Premio2 = localStorage.getItem("Premio2");
+  var Cantidad2 = localStorage.getItem("Cantidad2");
+  app.request.post(serviceURL + "insertarPedido.php", {
+    IdUsuario: IdUsuario,
+    IdSucursal: IdSucursal,
+    Premio1: Premio1,
+    Cantidad1: Cantidad1,
+    Premio2: Premio2,
+    Cantidad2: Cantidad2
+  }, function (data) {
+
+    console.log("Estos son los datos que llegan de insertarPedido.php");
+    console.log(data);
+      app.dialog.alert (data ,"Canje de premio");
+    limpiarLocalStorage();
+    if (vista =="premios")
+    limpiarListaPedido('.pedidos-list');
+    if (vista == "pedidos")
+    limpiarListaPedido('.carrito-list');
+  });
 }
 
 function validarPuntajePremioActual()
@@ -88,7 +117,7 @@ function validarPuntajePremioActual()
       text: "Actualmente usted cuenta con " + PuntajeUsuario + " puntos, por lo que no son suficientes para agregar este permio a su canje.",
       position: 'bottom',
       closeButton: true,
-      closeButtonText: 'Ni pedo',
+      closeButtonText: 'Ok',
       closeButtonColor: 'orange',
       closeTimeout: 6000,
     });
@@ -118,12 +147,20 @@ function calcularPuntajePedido()
   return PuntajePedido;
 }
 
+function ultimoPedido()
+{
+  // Devolvemos true si el usuario ha efectuado un pedio de canje de premio hoy.
+  return false;
+}
+
 function limpiarLocalStorage()
 {
   localStorage.setItem("Premio1", "");
+  localStorage.setItem("TipoPremio1", "");
   localStorage.setItem("Puntaje1", "");
   localStorage.setItem("Cantidad1", "");
   localStorage.setItem("Premio2", "");
+  localStorage.setItem("TipoPremio2", "");
   localStorage.setItem("Puntaje2", "");
   localStorage.setItem("Cantidad2", "");
   localStorage.setItem("PuntajeUsuario", "");
@@ -136,7 +173,7 @@ function limpiarLocalStorage()
 
 function actualizarBadge(action)
 {
- var cuantos = $$('.iconito').text();
+ var cuantos = parseInt($$('.iconito').text());
  if (action=="mas")
  {
   // Consultamos el badge
@@ -180,6 +217,12 @@ function actualizarListadoPremios(pTipoPremio, elList) {
   }); 
 }
 
+function limpiarListaPedido(Lista)
+{ 
+  var lista= app.virtualList.get(Lista);
+  lista.deleteAllItems();
+  console.log("Limpiamos la lista: " + Lista);
+}
 // Specify your beacon 128bit UUIDs here.
 var regions =
   [
@@ -194,6 +237,7 @@ var inBackground = false;
 
 $$('.premios-icon').on('click', function () {
   actualizarListadoPremios('Habitacion', '.habitaciones-list');
+  actualizarListaPedido('.carrito-list');
 });
 
 $$('.pedidos-icon').on('click', function () {
@@ -230,12 +274,10 @@ $$('.pedidos-icon').on('click', function () {
   }
   console.log("Vamos a inspeccionar los elementos del carrito");
   console.log(elemento);
+  
   app.virtualList.create({
-    // List Element
     el: '.carrito-list',
-    // Pass array with items
     items: elemento,
-    // List item Template7 template
     itemTemplate: '<li class="swipeout deleted-callback">' +
       '<a href="#" class="item-link item-content swipeout-content">' +
       '<div class="item-inner">' +
@@ -250,47 +292,11 @@ $$('.pedidos-icon').on('click', function () {
       '</a>' +
       '</li>',
   });
-
-  $$('.deleted-callback').on('swipeout:deleted', function (e) {
-    // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
-    var posicion = e.target.f7VirtualListIndex;
-    if (posicion == 0) // Eliminaron el primer elemento de la lista
-    {
-      // vamos a pasar el premio2 al premio1 y limpiar premios2
-      var Premio2 = localStorage.getItem("Premio2");
-      var Puntaje2 = localStorage.getItem("Puntaje2");
-      var Cantidad2 = localStorage.getItem("Cantidad2");
-      localStorage.setItem("Premio1", Premio2);
-      localStorage.setItem("Puntaje1", Puntaje2);
-      localStorage.setItem("Cantidad1", Cantidad2);
-      localStorage.setItem("Premio2", "");
-      localStorage.setItem("Puntaje2", "");
-      localStorage.setItem("Cantidad2", "");
-    } else //Eliminaros el segundo elemento de la lista
-    {
-      localStorage.setItem("Premio2", "");
-      localStorage.setItem("Puntaje2", "");
-      localStorage.setItem("Cantidad2", "");
-    }
-    var PuntajePedido = calcularPuntajePedido();
-    $$('.SumaPuntos').text(PuntajePedido);
-    if (PuntajePedido > PuntajeUsuario) {
-      $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
-      $$('.pedido-canje').addClass("disabled");
-    } else {
-      $$('.pedido-canje').removeClass("disabled");
-      $$('.AlertaPedido').text("");
-    }
-    if (PuntajePedido == 0) {
-      $$('.pedido-canje').addClass("disabled");
-    }
-    actualizarBadge("menos");
-  });
+  // actualizarListaPedido('.pedidos-list');
 });
 
 document.addEventListener('pause', function () { inBackground = true });
 document.addEventListener('resume', function () { inBackground = false });
-
 // Dictionary of beacons.
 var beacons = {};
 
@@ -311,7 +317,6 @@ function onDeviceReady() {
   window.locationManager = cordova.plugins.locationManager;
   // Start tracking beacons!
   startScan();
-  
   // Display refresh timer.
   updateTimer = setInterval(displayBeaconList, 500);
 }
@@ -369,7 +374,7 @@ function startScan() {
       i + 1,
       regions[i].uuid);
 
-    // Start ranging.
+    // Start ranging
     locationManager.startRangingBeaconsInRegion(beaconRegion)
       .fail(console.error)
       .done();
@@ -384,18 +389,30 @@ function startScan() {
 
 function displayBeaconList() {
   // Clear beacon list.
+  // TODO Aqui vamos a 
   $('#found-beacons').empty();
-
   var timeNow = Date.now();
-
+  var element = [];
+  // Aqui creamos la lista virtual, y cada que encuentre un elemento de beacon, insertamos
+  var listaEstimotes = app.virtualList.create({
+    el: '.estimotes-list',
+    items: [],
+    itemTemplate: 
+    '<li>' +
+      '<a href="#" class="item-link item-content">' +
+        '<div class="item-inner">' +
+          '<div class="item-title-row">' +
+            '<div class="item-title">{{Habitacion}}</div>' +
+          '</div>' +
+          '<div class="item-subtitle">{{Puntos}}</div>' +
+        '</div>' +
+      '</a>' +
+    '</li>',
+  });
   // Update beacon list.
   $.each(beacons, function (key, beacon) {
-    // Only show beacons that are updated during the last 60 seconds.
+    // Solo se muestran los estimotes que están en un rango de 60 segundos
     if (beacon.timeStamp + 60000 > timeNow) {
-      // Map the RSSI value to a width in percent for the indicator.
-      var rssiWidth = 1; // Used when RSSI is zero or greater.
-      if (beacon.rssi < -100) { rssiWidth = 100; }
-      else if (beacon.rssi < 0) { rssiWidth = 100 + beacon.rssi; }
       var tipoEstimote;
       var puntaje;
       var mensaje;
@@ -406,7 +423,7 @@ function displayBeaconList() {
         puntaje = 300;
         mensaje = "Que tenga una agradable fiesta";
       }
-      if (beacon.uuid == 'b9407f30-f5f8-466e-aff9-25556b57fe6d') // Azul hielo
+      if (beacon.uuid == 'b9407f30-f5f8-466e-aff9-25556b57fe6d' || beacon.uuid == 'B9407F30-F5F8-466E-AFF9-25556B57FE6D') // Azul hielo
       {
         tipoEstimote = "Jacuzzi";
         puntaje = 200;
@@ -418,16 +435,12 @@ function displayBeaconList() {
         puntaje = 100;
         mensaje = "Comodidad y discreción al alcance de su mano";
       }
-      var element = $(
-        '<li>'
-        + '<strong>Habitacion: ' + tipoEstimote + '</strong><br />'
-        + 'Puntaje: ' + puntaje + '<br />'
-        + mensaje + '<br />'
-        + '</li>'
-      );
-
-      $('#warning').remove();
-      $('#found-beacons').append(element);
+      element.push({
+        Habitacion: tipoEstimote,
+        Puntos: puntaje
+      })
+      $('#warning').text("Por favor elija su habitación: ");
     }
   });
+  listaEstimotes.appendItems(element);
 }

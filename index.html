@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/animations.css">
 
-  <!-- <script src="cordova.js"></script> -->
+  <script src="cordova.js"></script>
   <script src="libs/jquery/jquery.js"></script>
   <script src="libs/evothings/evothings.js"></script>
   <script src="libs/evothings/ui/ui.js"></script>
@@ -167,9 +167,10 @@
         </div>
         <div class="page-content">
           <div class="block">
-          <p id="warning">Estamos analizando si usted es propenso a ganar puntos por favor espere ....</p>
-          <ul id="found-beacons" class="dynamic"></ul>
+            <p id="warning">Estamos analizando si usted es propenso a ganar puntos por favor espere ....</p>
+              <div id="found-beacons" class="list virtual-list estimotes-list">
 
+            </div>
           </div>
         </div>
       </div>
@@ -180,9 +181,9 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="title"></div>
-            <!-- <div class="right"><a href="#" class="link popup-close">Cerrar</a></div> -->
+            <div class="right"><a href="#" class="link popup-close">Cerrar</a></div>
           </div>
-        </div>
+        </div> 
         <div class="page-content">
           <div class="block">
             <center><div class="usuario" ></div></center>
