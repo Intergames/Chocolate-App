@@ -121,14 +121,14 @@ function calcularPuntajePedido()
   var Cantidad1 = localStorage.getItem("Cantidad1");
   var Puntaje2 = localStorage.getItem("Puntaje2");
   var Cantidad2 = localStorage.getItem("Cantidad2");
-  if (Puntaje1 == "")
+  if (Puntaje1 == "" || isNaN(Puntaje1)) 
     Puntaje1 = 0;
-  if (Cantidad1 == "")
+  if (Cantidad1 == "" || isNaN(Cantidad1))
     Cantidad1 = 1;
-  if (Puntaje2 == "")
+  if (Puntaje2 == "" || isNaN(Puntaje2))
     Puntaje2 = 0;
-  if (Cantidad2 == "")
-    Cantidad1 = 1;
+  if (Cantidad2 == "" || isNaN(Cantidad2))
+    Cantidad2 = 1;
   var PuntajePedido = parseFloat(Cantidad1 * Puntaje1) + parseFloat(Cantidad2 * Puntaje2);
   return PuntajePedido;
 }
@@ -209,6 +209,98 @@ var inBackground = false;
 
 $$('.premios-icon').on('click', function () {
   actualizarListadoPremios('Habitacion', '.habitaciones-list');
+});
+
+$$('.pedidos-icon').on('click', function () {
+  var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+  $$('.PuntajeUsuarioCarrito').text(PuntajeUsuario);
+  console.log("Este es el puntaje sacado de localstorage" + PuntajeUsuario)
+  var elemento = [];
+  var Premio1 = localStorage.getItem("Premio1");
+  var Puntaje1 = localStorage.getItem("Puntaje1");
+  var Cantidad1 = localStorage.getItem("Cantidad1");
+  var Premio2 = localStorage.getItem("Premio2");
+  var Puntaje2 = localStorage.getItem("Puntaje2");
+  var Cantidad2 = localStorage.getItem("Cantidad2");
+  if (Premio1 != "") {
+    elemento.push({
+      Premio: Cantidad1 + " x " + Premio1,
+      Puntos: Cantidad1 * Puntaje1
+    })
+  }
+  if (Premio2 != "") {
+    elemento.push({
+      Premio: Cantidad2 + " x " + Premio2,
+      Puntos: Cantidad2 * Puntaje2
+    })
+  }
+  // Calculamos la suma de puntos de de ambos elementos
+  var PuntajePedido = calcularPuntajePedido();
+  $$('.SumaPuntosCarrito').text(PuntajePedido);
+  if (PuntajePedido > PuntajeUsuario) {
+    $$('.AlertaCarrito').text("No tienes puntos suficientes para este canje.");
+    $$('.carrito-canje').addClass("disabled");
+  } else {
+    $$('.carrito-canje').removeClass("disabled");
+  }
+  console.log("Vamos a inspeccionar los elementos del carrito");
+  console.log(elemento);
+  app.virtualList.create({
+    // List Element
+    el: '.carrito-list',
+    // Pass array with items
+    items: elemento,
+    // List item Template7 template
+    itemTemplate: '<li class="swipeout deleted-callback">' +
+      '<a href="#" class="item-link item-content swipeout-content">' +
+      '<div class="item-inner">' +
+      '<div class="item-title-row">' +
+      '<div class="item-title">{{Premio}}</div>' +
+      '</div>' +
+      '<div class="item-subtitle">{{Puntos}}</div>' +
+      '</div>' +
+      '<div class="swipeout-actions-right">' +
+      '<a href="#" class="swipeout-delete">Borrar</a>' +
+      '</div>' +
+      '</a>' +
+      '</li>',
+  });
+
+  $$('.deleted-callback').on('swipeout:deleted', function (e) {
+    // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
+    var posicion = e.target.f7VirtualListIndex;
+    if (posicion == 0) // Eliminaron el primer elemento de la lista
+    {
+      // vamos a pasar el premio2 al premio1 y limpiar premios2
+      var Premio2 = localStorage.getItem("Premio2");
+      var Puntaje2 = localStorage.getItem("Puntaje2");
+      var Cantidad2 = localStorage.getItem("Cantidad2");
+      localStorage.setItem("Premio1", Premio2);
+      localStorage.setItem("Puntaje1", Puntaje2);
+      localStorage.setItem("Cantidad1", Cantidad2);
+      localStorage.setItem("Premio2", "");
+      localStorage.setItem("Puntaje2", "");
+      localStorage.setItem("Cantidad2", "");
+    } else //Eliminaros el segundo elemento de la lista
+    {
+      localStorage.setItem("Premio2", "");
+      localStorage.setItem("Puntaje2", "");
+      localStorage.setItem("Cantidad2", "");
+    }
+    var PuntajePedido = calcularPuntajePedido();
+    $$('.SumaPuntos').text(PuntajePedido);
+    if (PuntajePedido > PuntajeUsuario) {
+      $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+      $$('.pedido-canje').addClass("disabled");
+    } else {
+      $$('.pedido-canje').removeClass("disabled");
+      $$('.AlertaPedido').text("");
+    }
+    if (PuntajePedido == 0) {
+      $$('.pedido-canje').addClass("disabled");
+    }
+    actualizarBadge("menos");
+  });
 });
 
 document.addEventListener('pause', function () { inBackground = true });
