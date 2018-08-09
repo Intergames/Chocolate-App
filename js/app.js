@@ -24,6 +24,7 @@ $$('.open-login').on('click', function () {
           app.popup.close(".demo-login",true);
           localStorage.setItem("PuntajeUsuario", info.Puntos);
           localStorage.setItem("IdUsuario", info.IdUsuario);
+          localStorage.setItem("NombreUsuario", info.NombreUsuario);
         });
     });
     // Consultamos y almacenamos los puntos acumulados por el usuario
@@ -34,15 +35,24 @@ $$('.btn-registrar').on('click', function () {
   var vnombreRegistro = $$('.nombre_registro').val();
   var vemaiRegistro = $$('.email_registro').val();
   var vpassRegistro = $$('.pass_registro').val();
-  app.dialog.alert(vnombreRegistro, "Nombre de registro");
+  // app.dialog.alert(vnombreRegistro, "Nombre de registro");
   app.request.post(serviceURL + "insertarUsuario.php", { username: vnombreRegistro, psswrd: vpassRegistro, email: vemaiRegistro }, function (data) {
     app.dialog.alert(data, "Registro de usuarios");
+    app.popup.close(".demo-registro", true);
   });
 });
 
 $$('.cerrar-sesion').on('click', function () {
   limpiarLocalStorage();
   app.popup.open(".demo-login", true);
+});
+
+$$('#cerrar-registro').on('click', function () {
+  app.popup.close(".demo-registro", true);
+});
+
+$$('#cerrar-login').on('click', function () {
+  app.popup.close(".demo-login", true);
 });
 
 // Init/Create views
@@ -63,7 +73,6 @@ var settingsView = app.views.create('#view-settings', {
   url: '/settings/'
 });
 
-
 serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
 
 function esNumero(numero) {
@@ -77,6 +86,25 @@ function esNumero(numero) {
   return bandera;
 }
 
+function actualizarListaPedido(lista)
+{
+  // Actualizamos lista virtual
+  
+} 
+
+function ganarPuntos(vIdUsuario, vPuntos, vHabitacion) {
+  app.request.post(serviceURL + "insertarPuntos.php", {
+    IdUsuario: vIdUsuario,
+    Puntos: vPuntos,
+    Habitacion: vHabitacion
+  }, function (data) {
+    app.dialog.alert(data, "Canje de premio");
+    // Tomamos los puntos de cuando inicio sesión, e incrementamos con vPuntos
+    var puntajeActual = localStorage.getItem("PuntajeUsuario");
+    localStorage.setItem("PuntajeUsuario", parseInt(puntajeActual) + parseInt(vPuntos));
+  });
+}
+
 function realizarPedido(vista)
 {
   var IdSucursal = 1; 
@@ -85,15 +113,23 @@ function realizarPedido(vista)
   var Cantidad1 = localStorage.getItem("Cantidad1");
   var Premio2 = localStorage.getItem("Premio2");
   var Cantidad2 = localStorage.getItem("Cantidad2");
+  var NombreUsuario = localStorage.getItem("NombreUsuario");
+  var PuntosTotales = calcularPuntajePedido();
+  console.log("Estos son los puntos totales: " + PuntosTotales)
   app.request.post(serviceURL + "insertarPedido.php", {
     IdUsuario: IdUsuario,
+    NombreUsuario: NombreUsuario,
     IdSucursal: IdSucursal,
     Premio1: Premio1,
     Cantidad1: Cantidad1,
     Premio2: Premio2,
-    Cantidad2: Cantidad2
+    Cantidad2: Cantidad2,
+    PuntosTotales: PuntosTotales
   }, function (data) {
-
+    PuntosAnteriores = localStorage.getItem("PuntajeUsuario");
+    NuevosPuntos = parseFloat(PuntosAnteriores) - parseFloat(PuntosTotales);
+    $$("#PuntajeUsuarioPedido").text(NuevosPuntos);
+    localStorage.setItem("PuntajeUsuario",NuevosPuntos);
     console.log("Estos son los datos que llegan de insertarPedido.php");
     console.log(data);
       app.dialog.alert (data ,"Canje de premio");
@@ -163,7 +199,6 @@ function limpiarLocalStorage()
   localStorage.setItem("TipoPremio2", "");
   localStorage.setItem("Puntaje2", "");
   localStorage.setItem("Cantidad2", "");
-  localStorage.setItem("PuntajeUsuario", "");
   localStorage.setItem("IdPremioGlobal", "");
   localStorage.setItem("TipoPremioGlobal","");
   localStorage.setItem("PuntosPremioActual", "");
@@ -235,6 +270,13 @@ var regions =
 var notificationID = 0;
 var inBackground = false;
 
+$$('.canje-premio').on('click', function () {
+  var vIdUsuario = localStorage.getItem("IdUsuario");
+  var vPuntaje = localStorage.getItem("puntaje");
+  var vTipoEstimote = localStorage.getItem("tipoEstimote");
+  ganarPuntos(vIdUsuario,vPuntaje,vTipoEstimote);
+}); 
+
 $$('.premios-icon').on('click', function () {
   actualizarListadoPremios('Habitacion', '.habitaciones-list');
   actualizarListaPedido('.carrito-list');
@@ -271,6 +313,10 @@ $$('.pedidos-icon').on('click', function () {
     $$('.carrito-canje').addClass("disabled");
   } else {
     $$('.carrito-canje').removeClass("disabled");
+  }
+  if (PuntajePedido == 0)
+  {
+    $$('.carrito-canje').addClass("disabled");
   }
   console.log("Vamos a inspeccionar los elementos del carrito");
   console.log(elemento);
@@ -314,11 +360,11 @@ app.initialize = function () {
 
 function onDeviceReady() {
   // Specify a shortcut for the location manager holding the iBeacon functions.
-  window.locationManager = cordova.plugins.locationManager;
-  // Start tracking beacons!
-  startScan();
-  // Display refresh timer.
-  updateTimer = setInterval(displayBeaconList, 500);
+  // window.locationManager = cordova.plugins.locationManager;
+  // // Start tracking beacons!
+  // startScan();
+  // // Display refresh timer.
+  // updateTimer = setInterval(displayBeaconList, 500);
 }
 
 function startScan() {
@@ -394,53 +440,60 @@ function displayBeaconList() {
   var timeNow = Date.now();
   var element = [];
   // Aqui creamos la lista virtual, y cada que encuentre un elemento de beacon, insertamos
-  var listaEstimotes = app.virtualList.create({
-    el: '.estimotes-list',
-    items: [],
-    itemTemplate: 
-    '<li>' +
-      '<a href="#" class="item-link item-content">' +
-        '<div class="item-inner">' +
-          '<div class="item-title-row">' +
-            '<div class="item-title">{{Habitacion}}</div>' +
-          '</div>' +
-          '<div class="item-subtitle">{{Puntos}}</div>' +
-        '</div>' +
-      '</a>' +
-    '</li>',
-  });
+  // var listaEstimotes = app.virtualList.create({
+  //   el: '.estimotes-list',
+  //   items: [],
+  //   itemTemplate: 
+  //   '<li>' +
+  //     '<a href="#" class="item-link item-content">' +
+  //       '<div class="item-inner">' +
+  //         '<div class="item-title-row">' +
+  //           '<div class="item-title">{{Habitacion}}</div>' +
+  //         '</div>' +
+  //         '<div class="item-subtitle">{{Puntos}}</div>' +
+  //       '</div>' +
+  //     '</a>' +
+  //   '</li>',
+  // });
   // Update beacon list.
   $.each(beacons, function (key, beacon) {
     // Solo se muestran los estimotes que están en un rango de 60 segundos
-    if (beacon.timeStamp + 60000 > timeNow) {
+    // if (beacon.timeStamp + 120000 > timeNow) {
       var tipoEstimote;
       var puntaje;
       var mensaje;
       // Create tag to display beacon data.
-      if (beacon.uuid == '65f3bc6c-f5bf-46df-a58b-8cb3e449fb9c') // Morado
+      var morado = '65f3bc6c-f5bf-46df-a58b-8cb3e449fb9c'.toUpperCase();
+      var azul = 'b9407f30-f5f8-466e-aff9-25556b57fe6d'.toUpperCase();
+      var verde = 'f6ce6c6d-860b-4247-a370-a32c5421802d'.toUpperCase();
+      console.log("Este es el morado: "+ morado);
+      console.log("Este es el Azul: "+ azul);
+      console.log("Este es el verde: "+ verde);
+      if (beacon.uuid === '65f3bc6c-f5bf-46df-a58b-8cb3e449fb9c' || beacon.uuid === "65F3BC6C-F5BF-46DF-A58B-8CB3E449FB9C") // Morado
       {
         tipoEstimote = "Fiestera";
         puntaje = 300;
         mensaje = "Que tenga una agradable fiesta";
       }
-      if (beacon.uuid == 'b9407f30-f5f8-466e-aff9-25556b57fe6d' || beacon.uuid == 'B9407F30-F5F8-466E-AFF9-25556B57FE6D') // Azul hielo
+      if (beacon.uuid === 'b9407f30-f5f8-466e-aff9-25556b57fe6d' || beacon.uuid === "B9407F30-F5F8-466E-AFF9-25556B57FE6D") // Azul hielo
       {
         tipoEstimote = "Jacuzzi";
         puntaje = 200;
         mensaje = "Gracias por su preferencia";
       }
-      if (beacon.uuid == 'f6ce6c6d-860b-4247-a370-a32c5421802d') // Verde
+      if (beacon.uuid === 'f6ce6c6d-860b-4247-a370-a32c5421802d' || beacon.uuid === verde ) // Verde
       {
         tipoEstimote = "Peatonal";
         puntaje = 100;
         mensaje = "Comodidad y discreción al alcance de su mano";
       }
-      element.push({
-        Habitacion: tipoEstimote,
-        Puntos: puntaje
-      })
-      $('#warning').text("Por favor elija su habitación: ");
-    }
+      localStorage.setItem("tipoEstimote",tipoEstimote);
+      localStorage.setItem("puntaje",puntaje);
+
+      $('#warning').text("Gracias por hospedarse en nuestra habitacion: "+ tipoEstimote + ", le hemos otorgado: " + puntaje + " puntos");
+      $('#capa-premio-ganado').show(); 
+      app.preloader.hide();
+    // }
   });
-  listaEstimotes.appendItems(element);
+  // listaEstimotes.appendItems(element);
 }

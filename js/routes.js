@@ -10,9 +10,33 @@ routes = [
           limpiarLocalStorage();
           // window.locationManager = cordova.plugins.locationManager;
           // startScan();
-          updateTimer = setInterval(displayBeaconList, 500);
+          // updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
+          $('#capa-premio-ganado').hide();
         }
+      }
+    }
+  },
+  {
+    path: '/pedido-pendiente/',
+    name: 'pedido-pendiente',
+    url: './pages/pedidoPendiente.html',
+    on: {
+      pageInit: function (event, page) {
+        var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+        var vId = localStorage.getItem("IdUsuario");
+        app.request.post(serviceURL + "consultarCanjePendiente.php", {
+          Id: vId,
+        }, function (data) {
+          var info = JSON.parse(data);
+          if (info.Folio!="") {
+            $$('#PedidoPendiente').text(info.Folio);
+          }
+          else{
+            $$('.msg-pedido-pendiente').text("No tiene ningun pedido pendiente");
+          }
+          console.log(info);
+        });
       }
     }
   },
@@ -38,7 +62,7 @@ routes = [
         $$('.carrito-list').on('swipeout:deleted', function (e) {
           // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
           var posicion = e.target.f7VirtualListIndex;
-          app.dialog.alert("Eliminaste el elemento " + posicion);
+          // app.dialog.alert("Eliminaste el elemento " + posicion);
           var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
           if (posicion == 0) // Eliminaron el primer elemento de la lista
           {
@@ -65,6 +89,7 @@ routes = [
           }
           var PuntajePedido = calcularPuntajePedido();
           $$('.SumaPuntosCarrito').text(PuntajePedido);
+
           if (PuntajePedido > PuntajeUsuario) {
             $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
             $$('.carrito-canje').addClass("disabled");
@@ -103,14 +128,14 @@ routes = [
            var PedidoHoy = ultimoPedido();
            if (!PedidoHoy)
            { 
-           var vIdPremio = localStorage.getItem("IdPremioGlobal");
-           var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
-           var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
-           var Cantidad = app.stepper.getValue('.stepper-pedido');
-           $$('.PuntajeUsuarioPedido').text(vPuntajeUsuario);
-           // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
-           var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
-           app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
+            var vIdPremio = localStorage.getItem("IdPremioGlobal");
+            var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
+            var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+            var Cantidad = app.stepper.getValue('.stepper-pedido');
+            $$('.PuntajeUsuarioPedido').text(vPuntajeUsuario);
+            // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
+            var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+            app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
             var info = JSON.parse(data);
             var elemento =[];
             var Premio1 = localStorage.getItem("Premio1");
@@ -121,7 +146,6 @@ routes = [
             var TipoPremio2 = localStorage.getItem("TipoPremio2");
             var Puntaje2 = parseInt(localStorage.getItem("Puntaje2"));
             var Cantidad2 = parseInt(localStorage.getItem("Cantidad2"));
-
             // Verificamos que se pueda agrear el elemento actual elegido por el usuario
             if ((Cantidad1 + Cantidad) > 2)
             {
@@ -296,7 +320,7 @@ routes = [
           }
           else
           {
-            app.dialog.alert("Ya hiciste un pedido hoy, no te quieras pasar de verga");
+            app.dialog.alert("Ya hiciste un pedido hoy, por favor intenta mañana");
           }
         }
       }
@@ -363,7 +387,6 @@ routes = [
     path: '/settings/',
     url: './pages/settings.html'
   },
-
   // Page Loaders & Router
   {
     path: '/page-loader-template7/:user/:userId/:posts/:postId/',
@@ -372,7 +395,7 @@ routes = [
 
   {
     path: '/page-loader-component/:user/:userId/:posts/:postId/',
-    componentUrl: './pages/page-loader-component.html'
+    componentUrl: './pages/page-loader-component.html' 
   },
   // Default route (404 page). MUST BE THE LAST
   {

@@ -10,7 +10,6 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <title>Chocolate Boutique Motel App</title>
-
   <link rel="stylesheet" href="framework7/css/framework7.min.css">
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/app.css">
@@ -47,9 +46,16 @@
                 </li>
                 <li>
                   <a href="#"  class="panel-close button-raised historial-list">
-            		    <i class="icon f7-icons ios-only icon-ios-fill">settings_fill</i>
-            		    <i class="icon material-icons md-only">build</i>
+                    <i class="icon f7-icons ios-only icon-ios-fill">folder</i>
+                    <i class="icon material-icons md-only">assignment</i>
                   	<span class="tabbar-label" style="margin-right: 105px; margin-top: 5px;">Historial</span></a>
+                </li>
+                <li>
+                <a href="/pedido-pendiente/" class="panel-close button-raised historial-list">
+                    <i class="icon f7-icons ios-only icon-ios-fill">alarm_fill</i>
+                    <i class="icon material-icons md-only">access_alarms</i>
+                    <span class="tabbar-label" style="margin-right: 90px; margin-top: 5px;">Pendiente</span>
+                  </a>
                 </li>
                 <li>
                   <a href="#" data-view=".view-main" class="back panel-close cerrar-sesion">
@@ -122,7 +128,6 @@
               </div>
             </div>
           </div>
-
           <!-- Scrollable page content-->
           <div class="page-content">
              <div class="page-content grid-demo">
@@ -132,7 +137,6 @@
                   <div class="row">
                     <div class="col-33 tablet-33"><img src="" alt="" title="" width="94%"/></div>
                     <div class="col-33 tablet-33 popup-open" data-popup=".demo-popup"><img src="images/check.png" alt="" title="" width="80%"/><h4>REGISTRAR VISITA</h4></div>
-                 <!--    <a href="#" class="button button-raised popup-open" data-popup=".demo-popup">Open Popup</a> -->
                     <div class="col-33 tablet-33"><img src="" alt="" title="" width="94%"/></div>
                   </div>
                 </div>
@@ -141,7 +145,6 @@
           </div>
         </div>
       </div>
-
       <!-- Catalog View -->
       <div id="view-premios" class="view tab">
         <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
@@ -155,7 +158,6 @@
         <!-- Settings page will be loaded here dynamically from /settings/ route -->
       </div>
     </div>
-
     <!-- DETECTANDO BEACONS -->
     <div class="popup demo-popup">
       <div class="page">
@@ -168,9 +170,13 @@
         <div class="page-content">
           <div class="block">
             <p id="warning">Estamos analizando si usted es propenso a ganar puntos por favor espere ....</p>
-              <div id="found-beacons" class="list virtual-list estimotes-list">
-
-            </div>
+              <!-- <div id="found-beacons" class="list virtual-list estimotes-list">
+              </div> -->   
+              <div id="capa-premio-ganado" class="capa-premio-ganado">
+              <center>
+                <a href="#" class="button button-small button-fill button-raised color-green canje-premio">Agregar puntos a mi cuenta</a>
+              </center>
+              </div>
           </div>
         </div>
       </div>
@@ -181,7 +187,7 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="title"></div>
-            <div class="right"><a href="#" class="link popup-close">Cerrar</a></div>
+            <!-- <div class="right"><a href="#" id="cerrar-login" class="link cerrar-login">Cerrar</a></div> -->
           </div>
         </div> 
         <div class="page-content">
@@ -208,7 +214,7 @@
     <div class="navbar">
     <div class="navbar-inner">
       <div class="title">Registro de usuarios</div>
-      <div class="right"><a href="#" class="link popup-close">Cerrar</a></div>
+      <div class="right"><a href="#" id="cerrar-registro" class="link cerrar-registro">Cerrar</a></div>
     </div>
   </div>
 
@@ -240,7 +246,7 @@
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
-                <div class="item-title item-label ">Contraseña</div>
+                <div class="item-title item-labelpedidos-list">Contraseña</div>
                 <div class="item-input-wrap">
                   <input type="password" class="pass_registro" placeholder="Password"/>
                 </div>
@@ -248,26 +254,6 @@
             </div>
           </li>
           <li>
-          <label class="item-checkbox item-content">
-            <input type="checkbox" name="checkbox" value="Books" checked="checked"/>
-            <i class="icon icon-checkbox"></i>
-            <div class="item-inner">
-              <div class="item-title">Books</div>
-            </div>
-          </label>
-        </li>
-         <li>
-          <div class="item-content">
-            <div class="item-inner">
-              <div class="item-title">Toggle</div>
-              <div class="item-after">
-                <label class="toggle">
-                  <input type="checkbox" name="toggle" value="yes"><i class="toggle-icon"></i>
-                </label>
-              </div>
-            </div>
-          </div>
-    </li>
         </ul>
       </div>
       <div class="block block-strong">
