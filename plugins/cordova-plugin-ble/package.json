@@ -1,0 +1,66 @@
+{
+  "name": "cordova-plugin-ble",
+  "version": "2.0.1",
+  "description": "Bluetooth Low Energy Cordova plugin",
+  "cordova": {
+    "id": "cordova-plugin-ble",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evothings/cordova-ble.git#2.0.1"
+  },
+  "keywords": [
+    "bluetooth",
+    "ble",
+    "bluetooth low energy",
+    "bluetooth smart",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=6.0.0"
+    }
+  ],
+  "author": {
+    "name": "Evothings"
+  },
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/evothings/cordova-ble/issues"
+  },
+  "homepage": "https://github.com/evothings/cordova-ble#readme",
+  "gitHead": "77b29a18297902c45aaabd8ef57cc669c96728dd",
+  "_id": "cordova-plugin-ble@2.0.1",
+  "scripts": {},
+  "_shasum": "bae3aa56c021e266cb0daa82323854ad1ab8f8c6",
+  "_from": "cordova-plugin-ble@latest",
+  "_npmVersion": "3.9.5",
+  "_nodeVersion": "5.6.0",
+  "_npmUser": {
+    "name": "evothings",
+    "email": "npm@evothings.com"
+  },
+  "dist": {
+    "shasum": "bae3aa56c021e266cb0daa82323854ad1ab8f8c6",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-ble/-/cordova-plugin-ble-2.0.1.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "evothings",
+      "email": "npm@evothings.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-ble-2.0.1.tgz_1477133526116_0.4414533916860819"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-ble/-/cordova-plugin-ble-2.0.1.tgz"
+}

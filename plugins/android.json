@@ -1,0 +1,28 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-eddystone": {
+      "PACKAGE_NAME": "com.cbm.demo"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.cbm.demo"
+    },
+    "com.unarin.cordova.beacon": {
+      "PACKAGE_NAME": "com.cbm.demo"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-ble": {
+      "PACKAGE_NAME": "com.cbm.demo"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.cbm.demo"
+    }
+  }
+}

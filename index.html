@@ -14,13 +14,11 @@
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/animations.css">
-
   <script src="cordova.js"></script>
   <script src="libs/jquery/jquery.js"></script>
   <script src="libs/evothings/evothings.js"></script>
   <script src="libs/evothings/ui/ui.js"></script>
   <script src="app.js"></script>
-
 </head>
 <body class="theme-dark">
   <div id="app" class="page color-theme-orange">
@@ -45,16 +43,30 @@
                   	<span class="tabbar-label" style="margin-right: 83px; margin-top: 5px;">Mis puntos</span></a>
                 </li>
                 <li>
-                  <a href="#"  class="panel-close button-raised historial-list">
+                  <a href="/consumos/" class="panel-close button-raised consumos-list">
                     <i class="icon f7-icons ios-only icon-ios-fill">folder</i>
                     <i class="icon material-icons md-only">assignment</i>
                   	<span class="tabbar-label" style="margin-right: 105px; margin-top: 5px;">Historial</span></a>
                 </li>
                 <li>
-                <a href="/pedido-pendiente/" class="panel-close button-raised historial-list">
+                  <a href="/pedido-pendiente/" class="panel-close button-raised historial-list">
                     <i class="icon f7-icons ios-only icon-ios-fill">alarm_fill</i>
                     <i class="icon material-icons md-only">access_alarms</i>
                     <span class="tabbar-label" style="margin-right: 90px; margin-top: 5px;">Pendiente</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/aviso-privacidad/" class="panel-close button-raised privacidad-list">
+                    <i class="icon f7-icons ios-only icon-ios-fill">contacts</i>
+                    <i class="icon material-icons md-only">contacts</i>
+                    <span class="tabbar-label" style="margin-right: 22px; margin-top: 5px;">Aviso de privacidad</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/terminos/" class="panel-close button-raised terminos-list">
+                    <i class="icon f7-icons ios-only icon-ios-fill">person</i>
+                    <i class="icon material-icons md-only">pan_tool</i>
+                    <span class="tabbar-label" style="margin-right: -9px; margin-top: 5px;">Términos y condiciones</span>
                   </a>
                 </li>
                 <li>
@@ -169,7 +181,7 @@
         </div>
         <div class="page-content">
           <div class="block">
-            <p id="warning">Estamos analizando si usted es propenso a ganar puntos por favor espere ....</p>
+            <p id="warning">Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere ....</p>
               <!-- <div id="found-beacons" class="list virtual-list estimotes-list">
               </div> -->   
               <div id="capa-premio-ganado" class="capa-premio-ganado">
@@ -187,7 +199,7 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="title"></div>
-            <!-- <div class="right"><a href="#" id="cerrar-login" class="link cerrar-login">Cerrar</a></div> -->
+            <div class="right"><a href="#" id="cerrar-login" class="link cerrar-login">Cerrar</a></div>
           </div>
         </div> 
         <div class="page-content">
@@ -201,6 +213,8 @@
                       <p class="col button open-prompt color-red " style="color: white; font-size: 12px; text-transform: unset;">¿Olvidaste tu contraseña?</p><br>
                       <p class="col button open-reestablecer" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi codigo para reestablecer contraseña</p><br>
                       <p class="col button color-green popup-open" data-popup=".demo-registro" style="color: white; font-size: 12px; text-transform: unset;">¿No tienes cuenta? REGISTRATE</p>
+                      <p class="col button color-green popup-open" data-popup="#popup-aviso-privacidad" style="color: white; font-size: 12px; text-transform: unset;">Aviso de privacidad</p>
+                      <p class="col button color-green popup-open" data-popup="#popup-terminos" style="color: white; font-size: 12px; text-transform: unset;">Terminos y condiciones</p>
                     </p>
                   </center>
                 </div>
@@ -271,7 +285,7 @@
       <div class="form_logo"><img src="images/logo.png" alt="" title="" /></div>
         <div class="loginform">
             <!-- <form id="LoginForm" method="post"> -->
-        <input type="text" name="Username" value="" class="form_input required username" placeholder="Nombre de usuario" />
+        <input type="text" name="Username" value="" class="form_input required username" placeholder="Nombre de usuario o email" />
         <input type="password" name="Password" value="" class="form_input required pass" placeholder="Contraseña"/>
       <div class="forgot_pass">
         <!-- <a href="#" data-popup=".popup-forgot" class="open-popup">Forgot Password?</a> -->
@@ -283,21 +297,41 @@
             <div class="close_loginpopup_button"><a href="#" class="close-popup"><img src="images/icons/white/menu_close.png" alt="" title="" /></a>
       </div>
     </div>
-    <!-- Popup -->
-    <div class="popup" id="my-popup">
+    <!-- Aviso de privacidad  -->
+    <div class="popup popup-aviso-privacidad" id="popup-aviso-privacidad">
       <div class="view">
         <div class="page">
           <div class="navbar">
             <div class="navbar-inner">
-              <div class="title">Popup</div>
+              <div class="title">Aviso de privacidad</div>
               <div class="right">
-                <a href="#" class="link popup-close">Close</a>
+                <a href="#" class="link cerrar-popup-aviso-privacidad">Cerrar</a>
               </div>
             </div>
           </div>
           <div class="page-content">
             <div class="block">
-              <p>Popup content goes here.</p>
+              <div class="contenido-aviso-privacidad" style="text-align: justify;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Terminos y condiciones  -->
+    <div class="popup popup-terminos" id="popup-terminos">
+      <div class="view">
+        <div class="page">
+          <div class="navbar">
+            <div class="navbar-inner">
+              <div class="title">Aviso de privacidad</div>
+              <div class="right">
+                <a href="#" class="link cerrar-popup-terminos">Cerrar</a>
+              </div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="block">
+              <div class="contenido-terminos" style="text-align: justify;"></div>
             </div>
           </div>
         </div>
@@ -314,9 +348,7 @@
   <script type="text/javascript"> 
     $$('.open-prompt').on('click', function () {
       app.dialog.prompt('Escribe tu correo electrónico para reestablecer contraseña', 'CONTRASEÑA OLVIDADA', function (name) {
-        app.dialog.confirm('Tu correo es ' + name + '?', '', function () {
           app.dialog.alert('Se ha enviado un correo a ' + name + ', sigue las instrucciones para poder reestablecer tu contraseña. Revisa tu bandeja de SPAM si no lo ves en tu bandeja de entrada','¡LISTO!');
-        });
       });
     });
   </script>

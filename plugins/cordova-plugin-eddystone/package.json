@@ -1,0 +1,53 @@
+{
+  "name": "cordova-plugin-eddystone",
+  "version": "1.3.0",
+  "description": "Cordova/PhoneGap plugin for Eddystone beacons.",
+  "cordova": {
+    "id": "cordova-plugin-eddystone",
+    "platforms": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evothings/cordova-eddystone.git"
+  },
+  "keywords": [
+    "Eddystone",
+    "Beacons",
+    "ecosystem:cordova"
+  ],
+  "author": {
+    "name": "Evothings"
+  },
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/evothings/cordova-eddystone/issues"
+  },
+  "homepage": "https://github.com/evothings/cordova-eddystone#readme",
+  "gitHead": "2cefa0403d52c524d73bbf124f9bafe9015035a1",
+  "_id": "cordova-plugin-eddystone@1.3.0",
+  "scripts": {},
+  "_shasum": "311e578971b6eb54dccde73c95d2d2985327d9f6",
+  "_from": "cordova-plugin-eddystone@latest",
+  "_npmVersion": "3.9.5",
+  "_nodeVersion": "5.6.0",
+  "_npmUser": {
+    "name": "evothings",
+    "email": "npm@evothings.com"
+  },
+  "dist": {
+    "shasum": "311e578971b6eb54dccde73c95d2d2985327d9f6",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-eddystone/-/cordova-plugin-eddystone-1.3.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "evothings",
+      "email": "npm@evothings.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-eddystone-1.3.0.tgz_1468051480706_0.6465370687656105"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-eddystone/-/cordova-plugin-eddystone-1.3.0.tgz"
+}

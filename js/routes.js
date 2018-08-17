@@ -8,12 +8,37 @@ routes = [
         if (page.route.name == 'principal')
         {
           limpiarLocalStorage();
-          // window.locationManager = cordova.plugins.locationManager;
-          // startScan();
-          // updateTimer = setInterval(displayBeaconList, 500);
+          var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+          app.request.post(serviceURL + "avisoPrivacidad.php", function (data) {
+            $$('.contenido-aviso-privacidad').html(data);
+          });
+          app.request.post(serviceURL + "terminos.php", function (data) {
+            $$('.contenido-terminos').html(data);
+          });
+          window.locationManager = cordova.plugins.locationManager;
+          startScan();
+          updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
           $('#capa-premio-ganado').hide();
+          // Llenamos el aviso de privacidad
         }
+      }
+    }
+  },
+  {
+    path: '/consumos/',
+    name: 'consumos',
+    url: './pages/consumos.html',
+    on: {
+      pageInit: function (event, page) {
+        var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+        var vId = localStorage.getItem("IdUsuario");
+        console.log("Este el el id del usuario consulta desde pedido pendiente: " + vId)
+        app.request.post(serviceURL + "consumosUsuario.php", {
+          Id: vId,
+        }, function (data) {
+          $$('.consumos-usuario').html(data);
+        });
       }
     }
   },
@@ -46,10 +71,34 @@ routes = [
     url: './pages/puntaje.html',
     on: {
       pageInit: function (event, page) {
-        if (page.route.name == 'puntaje') {
           var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
           $$('.PuntajeUsuario').text(PuntajeUsuario);
         }
+      }
+  },
+  {
+    path: '/aviso-privacidad/',
+    name: 'aviso-privacidad',
+    url: './pages/avisoPrivacidad.html',
+    on: {
+      pageInit: function (event, page) {
+        var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+        app.request.post(serviceURL + "avisoPrivacidad.php", function (data) {
+          $$('.aviso-privacidad').html(data);
+        });
+      }
+    }
+  },
+  {
+    path: '/terminos/',
+    name: 'terminos',
+    url: './pages/terminos.html',
+    on: {
+      pageInit: function (event, page) {
+        var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+        app.request.post(serviceURL + "terminos.php", function (data) {
+          $$('.terminos-y-condiciones').html(data);
+        });
       }
     }
   },
@@ -102,8 +151,13 @@ routes = [
           }
           actualizarBadge("menos");
         });
+
+        $$('.carrito-canje').on('click', function () {
+          realizarPedido('carrito');
+          $$('.carrito-canje').addClass("disabled");
+        });
      }
-  }
+    }
   },
   {
     path: '/premios/',
@@ -266,10 +320,11 @@ routes = [
               // Item height
               // height: app.theme === 'ios' ? 63 : 73,
             });
-            
-            $$('.deleted-callback').on('swipeout:deleted', function (e) {
+            // Si eliminan un elemento de la lista.
+            $$('.pedidos-list').on('swipeout:deleted', function (e) {
               // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
               var posicion = e.target.f7VirtualListIndex;
+              // app.dialog.alert("Eliminaste el elemento de la vista de pedido: " + posicion);
               if (posicion == 0) // Eliminaron el primer elemento de la lista
               {
                 // vamos a pasar el premio2 al premio1 y limpiar premios2
@@ -323,6 +378,8 @@ routes = [
             app.dialog.alert("Ya hiciste un pedido hoy, por favor intenta mañana");
           }
         }
+        
+
       }
     },
     async: function (routeTo, routeFrom, resolve, reject) {

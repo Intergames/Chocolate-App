@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+		id          = "com.chocolateboutiquemotel.interlabs"
+        versionCode = "1" 
+        version     = "1.0.0" >
+    <name>Chocolate Boutique Motel</name>
+	<description>Chocolate Boutique Motel - Puntos de recompensa para nuestros clientes frecuentes.</description>
+	<author href="http://www.interlabs.com.mx" email="jesus.vital@interlabs.com.mx">Interlabs</author>
+		<!-- <preference name="phonegap-version" value="cli-6.5.0" />  -->
+		<preference name="orientation"      value="portrait" />
+		<preference name="target-device"    value="universal" />
+		<preference name="fullscreen"       value="true" />
+		<preference name="SplashScreenDelay" value="3000" />
+		<preference name="SplashMaintainAspectRatio" value="true" />
+		<preference name="target-device" value="universal" />
+		<preference name="webviewbounce" value="true" />
+		<preference name="prerendered-icon" value="true" />
+		<preference name="stay-in-webview" value="true" />
+		<preference name="ios-statusbarstyle" value="default" />
+		<preference name="detect-data-types" value="true" />
+		<preference name="exit-on-suspend" value="false" />
+<!-- 	<preference name="show-splash-screen-spinner" value="false" /> -->
+		<!-- <preference name="auto-hide-splash-screen" value="true" /> -->
+		<preference name="EnableViewportScale" value="true" />
+		<!-- <preference name="MediaPlaybackRequiresUserAction" value="false" /> -->
+		<!-- <preference name="AllowInlineMediaPlayback" value="false" /> -->
+		<!-- <preference name="BackupWebStorage" value="cloud" /> -->
+		<!-- <preference name="TopActivityIndicator" value="gray" /> -->
+		<!-- <preference name="KeyboardDisplayRequiresUserAction" value="false" /> -->
+		<preference name="HideKeyboardFormAccessoryBar" value="false" />
+		<preference name="SuppressesIncrementalRendering" value="false" />
+		<preference name="android-minSdkVersion" value="16" />
+<!-- 		<preference name="android-maxSdkVersion" value="24" /> -->
+		<preference name="android-installLocation" value="auto" />
+		<preference name="ErrorUrl" value=""/>
+<!-- 	<preference name="BackgroundColor" value="0x000000"/> -->
+		<preference name="KeepRunning" value="true"/>
+		<preference name="DisallowOverscroll" value="false"/>
+		<preference name="LoadingDialog" value=","/> 
+		<preference name="LoadUrlTimeoutValue" value="20000" />
+		<preference name="disable-cursor" value="false" />
+		<preference name="android-build-tool" value="gradle" />
+		<gap:platform name="android" />
+		<feature name="http://api.phonegap.com/1.0/network"/>
+		<plugin name="cordova-plugin-inappbrowser" />
+		<plugin name="cordova-plugin-network-information" />
+		<plugin name="cordova-plugin-splashscreen" />
+		<!-- <plugin name="cordova-plugin-x-socialsharing" source="npm" /> -->
+		<!-- <plugin name="cordova-plugin-whitelist" /> -->
+		<gap:plugin name="cordova-plugin-statusbar" source="npm" />
+		<gap:plugin name="cordova-plugin-vibration" source="npm" />
+		<!-- <gap:plugin name="org.apache.cordova.splashscreen" version="0.2.7" /> -->
+		<gap:plugin name="cordova-plugin-dialogs" source="npm" />
+		<!-- <gap:plugin name="org.apache.cordova.network-information" version="0.2.7" /> -->
+		<!-- <gap:plugin name="cordova-plugin-media" source="npm" /> -->
+		<!-- <gap:plugin name="cordova-plugin-x-socialsharing" source="npm" /> -->
+		<!-- <gap:plugin name="org.apache.cordova.inappbrowser" source="npm" /> -->
+		<gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
+		<!-- <gap:plugin name="cordova-plugin-file-transfer" source="npm" /> -->
+		
+
+		<icon src="/res/icon.png" />
+		<icon src="res/icon/android/icon-36m-ldpi.png"   gap:platform="android"    gap:density="ldpi" />
+		<icon src="res/icon/android/icon-48-mdpi.png"   gap:platform="android"    gap:density="mdpi" />
+		<icon src="res/icon/android/icon-72-hdpi.png"   gap:platform="android"    gap:density="hdpi" />
+		<icon src="res/icon/android/icon-96-xhdpi.png"  gap:platform="android"    gap:density="xhdpi" />
+		<icon src="res/icon/android/icon-144-xxhdpi.png"  gap:platform="android"    gap:density="xxhdpi" />
+		
+		<icon src="res/icon/ios/icon-57.png"            gap:platform="ios"        width="57" height="57" />
+		<icon src="res/icon/ios/icon-40.png"            gap:platform="ios"        width="40" height="40" />
+		<icon src="res/icon/ios/icon-60.png"            gap:platform="ios"        width="60" height="60" />		
+		<icon src="res/icon/ios/icon-72.png"            gap:platform="ios"        width="72" height="72" />
+		<icon src="res/icon/ios/icon-76.png"            gap:platform="ios"        width="76" height="76" />
+		<icon src="res/icon/ios/icon-57-2x.png"         gap:platform="ios"        width="114" height="114" />
+		<icon src="res/icon/ios/icon-60@2x.png"         gap:platform="ios"        width="120" height="120" />
+		<icon src="res/icon/ios/icon-72-2x.png"         gap:platform="ios"        width="144" height="144" />
+		<icon src="res/icon/ios/icon-76-2x.png"         gap:platform="ios"        width="152" height="152" />
+
+		<gap:splash src="res/screen/android/screen-ldpi-portrait.jpg"  gap:platform="android" gap:density="ldpi" />
+	    <gap:splash src="res/screen/android/screen-mdpi-portrait.jpg"  gap:platform="android" gap:density="mdpi" />
+	    <gap:splash src="res/screen/android/screen-hdpi-portrait.jpg"  gap:platform="android" gap:density="hdpi" />
+	    <gap:splash src="res/screen/android/screen-xhdpi-portrait.jpg" gap:platform="android" gap:density="xhdpi" />
+	    <gap:splash src="res/screen/android/screen-xxhdpi-portrait.jpg" gap:platform="android" gap:density="xxhdpi" />
+	    <gap:splash src="res/screen/android/screen-xxxhdpi-portrait.jpg" gap:platform="android" gap:density="xxxhdpi" />
+	    
+	    <gap:splash src="res/screen/ios/Default~iphone.jpg"            gap:platform="ios"     width="320" height="480" />
+	    <gap:splash src="res/screen/ios/Default-568h@2x~iphone.jpg"    gap:platform="ios"     width="640" height="1136" />
+	    <gap:splash src="res/screen/ios/Default@2x~iphone.jpg"         gap:platform="ios"     width="640" height="960" />
+	    <gap:splash src="res/screen/ios/Default-Portrait~ipad.jpg"     gap:platform="ios"     width="768" height="1024" />
+	    <gap:splash src="res/screen/ios/Default-667h.jpg"              gap:platform="ios"     width="750" height="1334" />
+	    <gap:splash src="res/screen/ios/Default-Landscape~ipad.jpg"    gap:platform="ios"     width="1024" height="768" />
+	    <gap:splash src="res/screen/ios/Default-Landscape-736h.jpg"    gap:platform="ios"     width="2208" height="1242" />
+	    <gap:splash src="res/screen/ios/Default-736h.jpg"              gap:platform="ios"     width="1242" height="2208" />
+	    <gap:splash src="res/screen/ios/Default-Landscape@2x~ipad.jpg" gap:platform="ios"     width="2048" height="1536" />
+	    <gap:splash src="res/screen/ios/Default-Portrait@2x~ipad.jpg"  gap:platform="ios"     width="1536" height="2048" />
+	    <access origin="*"/>
+		<plugin name="cordova-plugin-whitelist" version="1"/>
+			<allow-intent href="http://*/*"/>
+			<allow-intent href="https://*/*"/>
+			<allow-intent href="tel:*"/>
+			<allow-intent href="sms:*"/>
+			<allow-intent href="mailto:*"/>
+			<allow-intent href="geo:*"/>
+		<platform name="android">
+			<allow-intent href="market:*"/>
+		</platform>
+		<platform name="ios">
+			<allow-intent href="itms:*"/>
+			<allow-intent href="itms-apps:*"/>
+		</platform>
+		<plugin name="cordova-plugin-eddystone" spec="^1.3.0" />
+	    <engine name="ios" spec="^4.5.4" />
+	    <engine name="android" spec="^7.0.0" />
+	    <plugin name="com.unarin.cordova.beacon" spec="https://github.com/petermetz/cordova-plugin-ibeacon.git" />
+		
+</widget>
