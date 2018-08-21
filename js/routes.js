@@ -15,9 +15,9 @@ routes = [
           app.request.post(serviceURL + "terminos.php", function (data) {
             $$('.contenido-terminos').html(data);
           });
-          window.locationManager = cordova.plugins.locationManager;
-          startScan();
-          updateTimer = setInterval(displayBeaconList, 500);
+          // window.locationManager = cordova.plugins.locationManager;
+          // startScan();
+          // updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
           $('#capa-premio-ganado').hide();
           // Llenamos el aviso de privacidad

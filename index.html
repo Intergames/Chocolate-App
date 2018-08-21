@@ -81,21 +81,6 @@
         </div>
       </div>
     </div>
-    <!-- Right panel with reveal effect-->
-    <div class="panel panel-right panel-reveal theme-dark">
-      <div class="view">
-        <div class="page">
-          <div class="navbar">
-            <div class="navbar-inner">
-              <div class="title">Right Panel</div>
-            </div>
-          </div>
-          <div class="page-content">
-            <div class="block">Right panel content goes here</div>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- Views/Tabs container -->
     <div class="views tabs ios-edges">
       <!-- Tabbar for switching views-tabs --> 
@@ -211,7 +196,7 @@
                     <button class="button button-fill button-big open-login">INICIAR SESION</button>
                     <p class="row"><br>
                       <p class="col button open-prompt color-red " style="color: white; font-size: 12px; text-transform: unset;">¿Olvidaste tu contraseña?</p><br>
-                      <p class="col button open-reestablecer" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi codigo para reestablecer contraseña</p><br>
+                      <p class="col button open-reestablecer popup-open" data-popup=".popup-restore-key" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi cdigo para reestablecer contraseña</p><br>
                       <p class="col button color-green popup-open" data-popup=".demo-registro" style="color: white; font-size: 12px; text-transform: unset;">¿No tienes cuenta? REGISTRATE</p>
                       <p class="col button color-green popup-open" data-popup="#popup-aviso-privacidad" style="color: white; font-size: 12px; text-transform: unset;">Aviso de privacidad</p>
                       <p class="col button color-green popup-open" data-popup="#popup-terminos" style="color: white; font-size: 12px; text-transform: unset;">Terminos y condiciones</p>
@@ -278,7 +263,65 @@
       </div>
     </div>
   </div>
-
+  <!-- Reestablecer contraseña-->
+  <div class="popup popup-restore-key">
+  <div class="view">
+    <div class="page">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="title">Reestablecer su contraseña</div>
+          <div class="right">
+            <a href="#" class="link cerrar-restore-key">Cerrar</a>
+          </div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="block">
+          <div class="list ">
+            <ul>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label ">Clave enviada por correo</div>
+                    <div class="item-input-wrap">
+                      <input type="text" class="txt_key_restore" placeholder="Escribe por favor los 6 digitos enviados a su correo electrónico" />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label ">E-mail</div>
+                    <div class="item-input-wrap">
+                      <input type="email" class="txt_email_key_restore" placeholder="E-mail" />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
+                    <div class="item-title item-label ">Nueva contaraseña</div>
+                    <div class="item-input-wrap">
+                      <input type="password" class="txt_new_pass" placeholder="Por favor escriba la que seria su nueva contraseña" />
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div class="block block-strong">
+              <p class="row">
+              <input type="submit" value="ESTABLECER NUEVA CONTRASEÑA" class="col button button-big button-fill button-raised color-green btn-new-pass"/>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!--Login popup -->
   <div class="popup popup-login">
     <div class="content-block-login">
       <h4>Inicio de sesión</h4>
@@ -323,7 +366,7 @@
         <div class="page">
           <div class="navbar">
             <div class="navbar-inner">
-              <div class="title">Aviso de privacidad</div>
+              <div class="title">Términos y condiciones</div>
               <div class="right">
                 <a href="#" class="link cerrar-popup-terminos">Cerrar</a>
               </div>
@@ -345,13 +388,6 @@
   <script src="js/routes.js"></script>
   <!-- Your custom app scripts -->
   <script src="js/app.js"></script>
-  <script type="text/javascript"> 
-    $$('.open-prompt').on('click', function () {
-      app.dialog.prompt('Escribe tu correo electrónico para reestablecer contraseña', 'CONTRASEÑA OLVIDADA', function (name) {
-          app.dialog.alert('Se ha enviado un correo a ' + name + ', sigue las instrucciones para poder reestablecer tu contraseña. Revisa tu bandeja de SPAM si no lo ves en tu bandeja de entrada','¡LISTO!');
-      });
-    });
-  </script>
 </body>
 </html>
 

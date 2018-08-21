@@ -36,6 +36,21 @@ $$('.open-login').on('click', function () {
   });
 });
 
+$$('.open-prompt').on('click', function () {
+  app.dialog.prompt('Escribe tu correo electrónico para reestablecer contraseña', 'CONTRASEÑA OLVIDADA', function (email) {
+    app.request.post(serviceURL + "olvidoContra.php", {
+      email: email
+    }, function (data) {
+      if (data != "Usuario no encontrado") {
+        // app.dialog.alert(data);
+        app.dialog.alert('Se ha enviado un correo a ' + email + ', sigue las instrucciones para poder reestablecer tu contraseña. Revisa tu bandeja de SPAM si no lo ves en tu bandeja de entrada', '¡LISTO!');
+      } else {
+        app.dialog.alert("Usuario no encontrado", "Reestablecer contraseña");
+      }
+    });
+  });
+});
+
 $$('.btn-registrar').on('click', function () {
   var vnombreRegistro = $$('.nombre_registro').val();
   var vemaiRegistro = $$('.email_registro').val();
@@ -44,6 +59,25 @@ $$('.btn-registrar').on('click', function () {
   app.request.post(serviceURL + "insertarUsuario.php", { username: vnombreRegistro, psswrd: vpassRegistro, email: vemaiRegistro }, function (data) {
     app.dialog.alert(data, "Registro de usuarios");
     app.popup.close(".demo-registro", true);
+  });
+});
+
+$$('.btn-new-pass').on('click', function () {
+  var vkey = $$('.txt_key_restore').val();
+  var vemail = $$('.txt_email_key_restore').val();
+  var vPsswrd = $$('.txt_new_pass').val();
+  // app.dialog.alert(vnombreRegistro, "Nombre de registro");
+  app.request.post(serviceURL + "reestalbecerContra.php", {
+        email: vemail, 
+        psswrd: vPsswrd, 
+        key: vkey
+      }, function (data) {
+    if (data != "Registro no encontrado") {
+      app.dialog.alert("Su nueva contraseña se ha guardado exitosemante", "Nueva contraseña");
+      app.popup.close(".popup-restore-key", true);
+    } else {
+      app.dialog.alert("Su código enviado por email y correo no son validos o es un usuario no activado. Por favor intente de nuevo", "Nueva contraseña");
+    }
   });
 });
 
@@ -68,6 +102,9 @@ $$('.cerrar-popup-terminos').on('click', function () {
   app.popup.close(".popup-terminos", true);
 });
 
+$$('.cerrar-restore-key').on('click', function () {
+  app.popup.close(".popup-restore-key", true);
+});
 
 // Init/Create views
 var homeView = app.views.create('#view-home', {
@@ -292,6 +329,9 @@ var regions =
     { uuid: '8FE06DEF-A514-4E64-AE24-1D44C25F5D7C' }, // Morado Jacuzzi 10
     { uuid: '9E4049B4-7924-4EB8-AD23-3CE83F13AD86' }, // Verde sencilla 11
     { uuid: 'E5F781E1-BA9D-433E-9711-219CEA7DCD38' }, // Azul Jacuzzi 12
+    {
+      uuid: 'F98881F6-EBD5-4E8D-9016-736C4A777BAC'
+    }, // Azul Jacuzzi 12
   ];
 
 // Background detection.
@@ -526,7 +566,7 @@ function displayBeaconList() {
       var puntaje="";
       var estimote="";
       // Create tag to display beacon data.
-      var habitacion1 = 'E4787C7D-B081-4BFC-B2E3-D3251E828D67';
+      var habitacion1 = 'F98881F6-EBD5-4E8D-9016-736C4A777BAC';
       var habitacion2 = '5089CCA0-51F9-462A-9B20-DD26C8FB7132';
       var habitacion3 = '45ECAAC7-04AB-4E6C-976D-25554A7B9C27';
       var habitacion4 = '9FCED411-E711-41E4-B235-E6ABC6C22D22';
@@ -538,6 +578,7 @@ function displayBeaconList() {
       var habitacion10 = '8FE06DEF-A514-4E64-AE24-1D44C25F5D7C';
       var habitacion11 = '9E4049B4-7924-4EB8-AD23-3CE83F13AD86';
       var habitacion12 = 'E5F781E1-BA9D-433E-9711-219CEA7DCD38';
+      var habitacion13 = 'F98881F6-EBD5-4E8D-9016-736C4A777BAC';
       
       // if ((beacon.uuid === habitacion1.toLowerCase() || beacon.uuid === habitacion1) && beacon.proximity === 'ProximityNear') // Morado
       if (beacon.uuid === habitacion1.toLowerCase() || beacon.uuid === habitacion1) // Morado
@@ -619,6 +660,12 @@ function displayBeaconList() {
         tipoEstimote = "Jacuzzi 12";
         puntaje = beacon.rssi;
         estimote = habitacion12;
+      }
+      if (beacon.uuid === habitacion13.toLowerCase() || beacon.uuid === habitacion13) // Morado
+      {
+        tipoEstimote = "ICE";
+        puntaje = beacon.rssi;
+        estimote = habitacion13;
       }
       
       localStorage.setItem("tipoEstimote",tipoEstimote);
