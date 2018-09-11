@@ -8,18 +8,47 @@ var app = new Framework7({
   popup: {
     closeByBackdropClick: false,
   },
+  dialog: {
+    // set default title for all dialog shortcuts
+    title: 'Chocolate Boutique Motel',
+    // change default "OK" button text
+    buttonOk: 'Aceptar',
+    buttonCancel: 'Cancelar',
+    usernamePlaceholder: 'Nombre de usuario',
+    passwordPlaceholder: 'Contraseña'
+  },
   routes: routes,
+  init: true,
+  initOnDeviceReady: true
 });
+
+// Init/Create views
+var homeView = app.views.create('#view-home', {
+  url: '/'
+});
+
+var premiosView = app.views.create('#view-premios', {
+  url: '/premios/'
+});
+
+var vistaCarrito = app.views.create('#view-carrito', {
+  url: '/carrito/'
+});
+
+var AyudaView = app.views.create('#view-settings', {
+  url: '/ayuda/'
+});
+
 
 serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
 
 $$('.open-login').on('click', function () {
-  app.dialog.login('Ingresa tu nombre de usuario y contraseña', 'INICIAR SESION', function (username, password) {
-    app.request.post(serviceURL + "login.php", { username: username, psswrd: password }, function (data) {
+  app.dialog.login('Ingresa tu nombre de usuario y contraseña', 'INICIAR SESION', function (usuario, password) {
+    app.request.post(serviceURL + "login.php", { username: usuario, psswrd: password }, function (data) {
       app.dialog.alert(data, "Inicio de sesión");
       localStorage.setItem("PuntajeUsuario",data.Puntos);
         app.request.post(serviceURL + "consultarPuntaje.php", {
-          username: username,
+          username: usuario,
           psswrd: password
         }, function (data) {
           var info = JSON.parse(data);
@@ -81,6 +110,17 @@ $$('.btn-new-pass').on('click', function () {
   });
 });
 
+$$('.btn-registrar-visita').on('click', function () {
+  $$('#warning').html(
+    "<h3><center> Por favor asegurese que tiene encendido el bluetooth de su celular </center></h3>"+
+    "Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere <br>" +
+    "<br ><center ><img src = 'images/loading.gif' width = '20%'></center>"
+  );
+  localStorage.setItem("tipoEstimote", "");
+  localStorage.setItem("puntaje", "");
+  timeNow = Date.now();
+});
+
 $$('.cerrar-sesion').on('click', function () {
   limpiarLocalStorage();
   app.popup.open(".demo-login", true);
@@ -105,26 +145,6 @@ $$('.cerrar-popup-terminos').on('click', function () {
 $$('.cerrar-restore-key').on('click', function () {
   app.popup.close(".popup-restore-key", true);
 });
-
-// Init/Create views
-var homeView = app.views.create('#view-home', {
-  url: '/'
-});
-
-var premiosView = app.views.create('#view-premios', {
-  url: '/premios/'
-});
-
-var vistaCarrito = app.views.create('#view-carrito', {
-  url: '/carrito/'
-});
-
-
-var settingsView = app.views.create('#view-settings', {
-  url: '/settings/'
-});
-
-
 
 function esNumero(numero) {
   var bandera = false;
@@ -180,8 +200,6 @@ function realizarPedido(vista)
     NuevosPuntos = parseFloat(PuntosAnteriores) - parseFloat(PuntosTotales);
     $$("#PuntajeUsuarioPedido").text(NuevosPuntos);
     localStorage.setItem("PuntajeUsuario",NuevosPuntos);
-    console.log("Estos son los datos que llegan de insertarPedido.php");
-    console.log(data);
       app.dialog.alert (data ,"Canje de premio");
     limpiarLocalStorage();
     if (vista =="premios")
@@ -205,9 +223,10 @@ function validarPuntajePremioActual()
   var PuntajeUsuario = parseInt(localStorage.getItem("PuntajeUsuario"));
   if (PuntajeUsuario < (Cantidad * PuntosActuales)) {
     // app.dialog.alert("Actualmente usted cuenta con " + PuntajeUsuario + " Por lo que no son suficientes para agregar este articulo a su pedido.");
+    
     var mitostadita = app.toast.create({
       // icon: app.theme === 'ios' ? '<i class="f7-icons">warning</i>' : '<i class="material-icons">warning</i>',
-      text: "Actualmente usted cuenta con " + PuntajeUsuario + " puntos, por lo que no son suficientes para agregar este permio a su canje.",
+      text: "Actualmente usted cuenta con " + PuntajeUsuario.toLocaleString('es-MX') + " puntos, por lo que no son suficientes para agregar este permio a su canje.",
       position: 'bottom',
       closeButton: true,
       closeButtonText: 'Ok',
@@ -238,12 +257,6 @@ function calcularPuntajePedido()
     Cantidad2 = 1;
   var PuntajePedido = parseFloat(Cantidad1 * Puntaje1) + parseFloat(Cantidad2 * Puntaje2);
   return PuntajePedido;
-}
-
-function ultimoPedido()
-{
-  // Devolvemos true si el usuario ha efectuado un pedio de canje de premio hoy.
-  return false;
 }
 
 function limpiarLocalStorage()
@@ -280,39 +293,117 @@ else if (action == "menos")
 function actualizarListadoPremios(pTipoPremio, elList) {
   app.request.post(serviceURL + "listadoPremios.php", { TipoPremio: pTipoPremio }, function (data) {
     var conversion = JSON.parse(data);
-    app.virtualList.create({
+    var cuantos = Object.keys(conversion).length; //Contamos el numero de elementos que llegan del server
+    if (cuantos>0)
+    {
+      if (elList == '.habitaciones-list')
+      {
+       $$('.motel-empty').hide();
+      }
+      if (elList == '.snack-list') {
+        $$('.snack-empty').hide();
+      }
+      if (elList == '.cocina-list') {
+        $$('.cocina-empty').hide();
+      }
+      if (elList == '.sexshop-list') {
+        $$('.sexshop-empty').hide();
+      }
+      // cuantos = 1;
+    }
+    // app.dialog.alert(cuantos);
+    var vl= app.virtualList.create({
       el: elList,
       items: conversion,
-      itemTemplate: 
+      cache: true,
+      rowsAfter: cuantos,
+      updatableScroll: true,
+      itemTemplate:
+      '<li>'+
       '<div class="card demo-card-header-pic" style="background-color: #ffffff;">' +
         '<div style="background-image:url(http://chocolateboutiquemotel.com/demoapp/images/{{imgPremio}})" class="card-header align-items-flex-end"></div>' +
         '<div class="card-content card-content-padding">' +
         '<div class="row" style="margin-top: -35px;">' +
-        '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
-        '<p style="text-transform: uppercase; color:#000000;">{{Premio}}</p>' +
+        '<div class="col-50 tablet-50"><br>' +
+            '<p style="color:#000000;">{{Premio}}</p>' +
         '</div>' +
-        '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
+        '<div class="col-50 tablet-50"><br>' +
         '<p class="date" style="font-weight: bold; font-size: 14px; color: orange; letter-spacing: -1.2px;">Valor: {{Puntos}} Puntos</p>' +
         '</div>' +
         '</div>' +
         '<div class="row" style="margin-top: -35px;">' +
-        '<div class="col-50 tablet-50"><img src="" alt="" title="" width="99%"/>' +
+        '<div class="col-50 tablet-50"><br>' +
         '</div>' +
         '</div>' +
-        '<div class="col-50 tablet-50" style="margin-top: 3px;"><img src="" alt="" title="" width="99%"/>' +
+        '<div class="col-50 tablet-50" style="margin-top: 3px;"><br>' +
         '<a href="/detallePremio/Id/{{IdPremio}}/TipoPremio/{{TipoPremio}}/" class="button button-small button-fill button-raised color-green link" @click="showToastCenter">Agregar a pedido</a>' +
         '</div>' + 
         '</div>' +
         '</div>' +
-        '</div>' 
+        '</div>' +
+        '</li>',
+        // dynamicHeightBufferSize: 50,
     });
+    vl.update();
+    vl.destroy(); // Te la mamaste Vladimir!
   }); 
 }
 
 function limpiarListaPedido(Lista)
 { 
+  if (Lista == ".pedidos-list")
+  {
+    $$('.SumaPuntos').text('0');
+    $$('.pedido-canje').addClass('disabled');
+    $$('.AlertaPedido').text('');
+  }
+  else
+  {
+    $$('.SumaPuntosCarrito').text('0');
+    $$('.carrito-canje').addClass('disabled');
+    $$('.AlertaPedido').text('');
+  }
   var lista= app.virtualList.get(Lista);
+  // Deshabilitamos el botón de pedido canje
   lista.deleteAllItems();
+}
+
+function fechaHoy() {
+  var hoy = new Date();
+  var dd = hoy.getDate();
+  var mm = hoy.getMonth() + 1; //hoy es 0!
+  var yyyy = hoy.getFullYear();
+
+  if (dd < 10) {
+    dd = '0' + dd
+  }
+
+  if (mm < 10) {
+    mm = '0' + mm
+  }
+  var respuesta = yyyy + '-' + mm + '-' + dd;
+  return respuesta;
+}
+
+function pedidoHoy(vfecha) {
+  // Devolvemos true si el usuario ha efectuado un pedio de canje de premio hoy.
+  var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+  var vIdUsuario = localStorage.getItem('IdUsuario');
+  app.request.post(serviceURL + "ultimoPedido.php", {
+    fecha: vfecha,
+    IdUsuario: vIdUsuario
+  });
+  console.log("Esta es la respuesta que viene de pedidohoy");
+  app.dialog.alert("Respuesta del server: " + respuesta['responseText']);
+  console.log(respuesta);
+  if (respuesta == "1")
+  {
+    return "true";
+  }
+  else
+  {
+    return "false";
+  }
 }
 // Specify your beacon 128bit UUIDs here.
 var regions =
@@ -329,9 +420,16 @@ var regions =
     { uuid: '8FE06DEF-A514-4E64-AE24-1D44C25F5D7C' }, // Morado Jacuzzi 10
     { uuid: '9E4049B4-7924-4EB8-AD23-3CE83F13AD86' }, // Verde sencilla 11
     { uuid: 'E5F781E1-BA9D-433E-9711-219CEA7DCD38' }, // Azul Jacuzzi 12
-    {
-      uuid: 'F98881F6-EBD5-4E8D-9016-736C4A777BAC'
-    }, // Azul Jacuzzi 12
+    { uuid: 'ABB825C0-132D-4049-01AE-542447B3CA82' }, // Zacatecas Jacuzzi 14
+    { uuid: 'F3C36438-8C65-4F82-85A4-E197920009BF' }, // Verde Sencilla 15
+    { uuid: '1730150A-0A2A-4A50-BBB0-D01CB5966B38' }, // Azul Sencilla 16
+    { uuid: 'E10F073A-52E2-4435-9329-904E2CFD5BA5' }, // Morado Sencilla 17
+    { uuid: '45D73B97-B069-4255-A440-EC3890F1DC06' }, // Morado Sencilla 19
+    { uuid: '6DE738C0-3863-4BAD-99DC-A68359186081' }, // Azul Sencilla 20
+    { uuid: '5FAA6EE5-8FBD-4C82-9C38-E9BF7789E46F' }, // Verde Sencilla 21
+    { uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D' }, // Verde Sencilla 22
+    { uuid: 'F6CE6C6D-860B-4247-A370-A32C5421802D' }, // Verde Peatonal 23 24
+    { uuid: 'F98881F6-EBD5-4E8D-9016-736C4A777BAC' }, // Morado Sencilla 25 26
   ];
 
 // Background detection.
@@ -346,10 +444,15 @@ $$('.canje-premio').on('click', function () {
 }); 
 
 $$('.premios-icon').on('click', function () {
-  actualizarListadoPremios('Habitacion', '.habitaciones-list');
+  // actualizarListadoPremios('Habitacion', '.habitaciones-list');
+  // actualizarListadoPremios('Barra', '.snack-list');
+  // actualizarListadoPremios('Cocina', '.cocina-list');
+  // actualizarListadoPremios('SexShop', '.sexshop-list');
+
+  
   // Cuando le dan clic al icono, construimos la lista virtual y mensajes segun sea el caso
   var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
-  $$('.PuntajeUsuarioPedido').text(PuntajeUsuario);
+  $$('#PuntajeUsuarioPedido').text(PuntajeUsuario);
   var elemento = [];
   var Premio1 = localStorage.getItem("Premio1");
   var Puntaje1 = localStorage.getItem("Puntaje1");
@@ -412,6 +515,10 @@ $$('.pedidos-icon').on('click', function () {
   var Premio2 = localStorage.getItem("Premio2");
   var Puntaje2 = localStorage.getItem("Puntaje2");
   var Cantidad2 = localStorage.getItem("Cantidad2");
+  if (Premio1 == "")
+    $$('.capa-boton-limipiar').hide();
+  else 
+    $$('.capa-boton-limipiar').show();
   if (Premio1 != "") {
     elemento.push({
       Premio: Cantidad1 + " x " + Premio1,
@@ -520,7 +627,7 @@ function startScan() {
         cordova.plugins.notification.local.schedule(
           {
             id: ++notificationID,
-            title: 'Acmule sus puntos',
+            title: 'Acumule sus puntos',
             text: 'Esta usted dentro de una habitación de Chocolate Boutique Motel.'
           });
           inBackground= false;
@@ -557,16 +664,14 @@ function startScan() {
 function displayBeaconList() {
   // Clear beacon list.
   // TODO Aqui vamos a 
-  $('#found-beacons').empty();
-  var timeNow = Date.now();
+  $$('#found-beacons').empty();
+  timeNow = Date.now();
+  var tipoEstimote="";
+  var puntaje="300";
   $.each(beacons, function (key, beacon) {
-    // Solo se muestran los estimotes que están en un rango de 60 segundos
     if (beacon.timeStamp + 240000 > timeNow) {
-      var tipoEstimote="";
-      var puntaje="";
-      var estimote="";
       // Create tag to display beacon data.
-      var habitacion1 = 'F98881F6-EBD5-4E8D-9016-736C4A777BAC';
+      var habitacion1 = 'E4787C7D-B081-4BFC-B2E3-D3251E828D67';
       var habitacion2 = '5089CCA0-51F9-462A-9B20-DD26C8FB7132';
       var habitacion3 = '45ECAAC7-04AB-4E6C-976D-25554A7B9C27';
       var habitacion4 = '9FCED411-E711-41E4-B235-E6ABC6C22D22';
@@ -578,102 +683,129 @@ function displayBeaconList() {
       var habitacion10 = '8FE06DEF-A514-4E64-AE24-1D44C25F5D7C';
       var habitacion11 = '9E4049B4-7924-4EB8-AD23-3CE83F13AD86';
       var habitacion12 = 'E5F781E1-BA9D-433E-9711-219CEA7DCD38';
-      var habitacion13 = 'F98881F6-EBD5-4E8D-9016-736C4A777BAC';
+      var habitacion14 = 'ABB825C0-132D-4049-01AE-542447B3CA82';
+      var habitacion15 = 'F3C36438-8C65-4F82-85A4-E197920009BF';
+      var habitacion16 = '1730150A-0A2A-4A50-BBB0-D01CB5966B38';
+      var habitacion17 = 'E10F073A-52E2-4435-9329-904E2CFD5BA5';
+      var habitacion18 = '45D73B97-B069-4255-A440-EC3890F1DC06';
+      var habitacion19 = 'FF0AEC41-376B-49D3-8231-D728F400A3E0';
+      var habitacion20 = '6DE738C0-3863-4BAD-99DC-A68359186081';
+      var habitacion21 = '5FAA6EE5-8FBD-4C82-9C38-E9BF7789E46F';
+      var habitacion22 = 'B9407F30-F5F8-466E-AFF9-25556B57FE6D';
+      var habitacion2324 = 'F6CE6C6D-860B-4247-A370-A32C5421802D';
+      var habitacion2526 = '65F3BC6C-F5BF-46DF-A58B-8CB3E449FB9C';
+      var habitacion69 = 'F98881F6-EBD5-4E8D-9016-736C4A777BAC';
       
       // if ((beacon.uuid === habitacion1.toLowerCase() || beacon.uuid === habitacion1) && beacon.proximity === 'ProximityNear') // Morado
       if (beacon.uuid === habitacion1.toLowerCase() || beacon.uuid === habitacion1) // Morado
       {
         tipoEstimote = "Sencilla 1";
-        puntaje = beacon.rssi;
-        estimote = habitacion1;
       }
       // if ((beacon.uuid === habitacion2.toLowerCase() || beacon.uuid === habitacion2) && beacon.proximity === 'ProximityNear' ) // Morado
       if (beacon.uuid === habitacion2.toLowerCase() || beacon.uuid === habitacion2) // Morado
       {
         tipoEstimote = "Sencilla 2";
-        puntaje = beacon.rssi;
-        estimote = habitacion2;
       }
       // if ((beacon.uuid === habitacion3.toLowerCase() || beacon.uuid === habitacion3) && beacon.proximity === 'ProximityNear') // Morado
       if (beacon.uuid === habitacion3.toLowerCase() || beacon.uuid === habitacion3) // Morado
       {
         tipoEstimote = "Sencilla 3";
-        puntaje = beacon.rssi;
-        estimote = habitacion3;
       }
       // if ((beacon.uuid === habitacion4.toLowerCase() || beacon.uuid === habitacion4) && beacon.proximity === 'ProximityNear') // Morado
       if (beacon.uuid === habitacion4.toLowerCase() || beacon.uuid === habitacion4) // Morado
       {
         tipoEstimote = "Sencilla 4";
-        puntaje = beacon.rssi;
-        estimote = habitacion4;
       }
       // if ((beacon.uuid === habitacion5.toLowerCase() || beacon.uuid === habitacion5) && beacon.proximity === 'ProximityNear') // Morado
       if (beacon.uuid === habitacion5.toLowerCase() || beacon.uuid === habitacion5) // Morado
       {
         tipoEstimote = "Sencilla 5";
-        puntaje = beacon.rssi;
-        estimote = habitacion5;
       }
       // if ((beacon.uuid === habitacion6.toLowerCase() || beacon.uuid === habitacion6) && beacon.proximity === 'ProximityNear') // Morado
       if (beacon.uuid === habitacion6.toLowerCase() || beacon.uuid === habitacion6) // Morado
       {
         tipoEstimote = "Sencilla 6";
-        puntaje = beacon.rssi;
-        estimote = habitacion6;
       }
       
       if (beacon.uuid === habitacion7.toLowerCase() || beacon.uuid === habitacion7) // Morado
       {
         tipoEstimote = "Sencilla 7";
-        puntaje = beacon.rssi;
-        estimote = habitacion7;
       }
 
       if (beacon.uuid === habitacion8.toLowerCase() || beacon.uuid === habitacion8) // Morado
       {
         tipoEstimote = "Sencilla 8";
-        puntaje = beacon.rssi;
-        estimote = habitacion8;
       }
       
       if (beacon.uuid === habitacion9.toLowerCase() || beacon.uuid === habitacion9) // Morado
       {
         tipoEstimote = "Jacuzzi 9";
-        puntaje = beacon.rssi;
-        estimote = habitacion9;
       }
       if (beacon.uuid === habitacion10.toLowerCase() || beacon.uuid === habitacion10) // Morado
       {
         tipoEstimote = "Jacuzzi 10";
-        puntaje = beacon.rssi;
-        estimote = habitacion10;
       }
       if (beacon.uuid === habitacion11.toLowerCase() || beacon.uuid === habitacion11) // Morado
       {
         tipoEstimote = "Sencilla 11";
-        puntaje = beacon.rssi;
-        estimote = habitacion11;
       }
       if (beacon.uuid === habitacion12.toLowerCase() || beacon.uuid === habitacion12) // Morado
       {
         tipoEstimote = "Jacuzzi 12";
-        puntaje = beacon.rssi;
-        estimote = habitacion12;
       }
-      if (beacon.uuid === habitacion13.toLowerCase() || beacon.uuid === habitacion13) // Morado
+      if (beacon.uuid === habitacion14.toLowerCase() || beacon.uuid === habitacion14) // Morado
       {
-        tipoEstimote = "ICE";
-        puntaje = beacon.rssi;
-        estimote = habitacion13;
+        tipoEstimote = "Jacuzzi 14";
       }
-      
+      if (beacon.uuid === habitacion15.toLowerCase() || beacon.uuid === habitacion15) // Morado
+      {
+        tipoEstimote = "Sencilla 15";
+      }
+      if (beacon.uuid === habitacion16.toLowerCase() || beacon.uuid === habitacion16) // Morado
+      {
+        tipoEstimote = "Sencilla 16";
+      }
+      if (beacon.uuid === habitacion17.toLowerCase() || beacon.uuid === habitacion17) // Morado
+      {
+        tipoEstimote = "Sencilla 17";
+      }
+      if (beacon.uuid === habitacion18.toLowerCase() || beacon.uuid === habitacion18) // Morado
+      {
+        tipoEstimote = "Sencilla 18";
+      }
+      if (beacon.uuid === habitacion19.toLowerCase() || beacon.uuid === habitacion19) // Morado
+      {
+        tipoEstimote = "Sencilla 19";
+      }
+      if (beacon.uuid === habitacion20.toLowerCase() || beacon.uuid === habitacion20) // Morado
+      {
+        tipoEstimote = "Sencilla 20";
+      }
+      if (beacon.uuid === habitacion21.toLowerCase() || beacon.uuid === habitacion21) // Morado
+      {
+        tipoEstimote = "Sencilla 21";
+      }
+      if (beacon.uuid === habitacion22.toLowerCase() || beacon.uuid === habitacion22) // Morado
+      {
+        tipoEstimote = "Sencilla 22";
+      }
+      if (beacon.uuid === habitacion2324.toLowerCase() || beacon.uuid === habitacion2324) // Morado
+      {
+        tipoEstimote = "Peatonal 23 o 24";
+      }
+      if (beacon.uuid === habitacion2526.toLowerCase() || beacon.uuid === habitacion2526) // Morado
+      {
+        tipoEstimote = "Peatonal 25 o 26";
+      }
+      if (beacon.uuid === habitacion69.toLowerCase() || beacon.uuid === habitacion69) // Morado
+      {
+        tipoEstimote = "Fiestera 69";
+      }
       localStorage.setItem("tipoEstimote",tipoEstimote);
       localStorage.setItem("puntaje",puntaje);
 
-      $('#warning').text("Gracias por hospedarse en nuestra habitacion: "+ tipoEstimote + ", le hemos otorgado: " + puntaje + " puntos con el estimote " + estimote);
-      $('#capa-premio-ganado').show(); 
-      app.preloader.hide();
+      $$('#warning').html("Gracias por hospedarse en nuestra habitacion: " + tipoEstimote + "<br><br> Le hemos otorgado:  " + puntaje + " Puntos");
+      $$('.capa-premio-ganado').show(); 
     }
   });
   // listaEstimotes.appendItems(element);
