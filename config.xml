@@ -7,10 +7,10 @@
     <name>Chocolate Boutique Motel</name>
 	<description>Chocolate Boutique Motel - Puntos de recompensa para nuestros clientes frecuentes.</description>
 	<author href="http://www.interlabs.com.mx" email="jesus.vital@interlabs.com.mx">Interlabs</author>
-		<!-- <preference name="phonegap-version" value="cli-6.5.0" />  -->
+		<preference name="phonegap-version" value="cli-6.5.0" /> 
 		<preference name="orientation"      value="portrait" />
 		<preference name="target-device"    value="universal" />
-		<preference name="fullscreen"       value="true" />
+		<!-- <preference name="fullscreen"       value="false" /> -->
 		<preference name="SplashScreenDelay" value="3000" />
 		<preference name="SplashMaintainAspectRatio" value="true" />
 		<preference name="target-device" value="universal" />
@@ -113,5 +113,5 @@
 	    <engine name="ios" spec="^4.5.4" />
 	    <engine name="android" spec="^7.0.0" />
 	    <plugin name="com.unarin.cordova.beacon" spec="https://github.com/petermetz/cordova-plugin-ibeacon.git" />
-		
+			<!-- <plugin name="cordova-plugin-local-notification" spec="https://github.com/katzer/cordova-plugin-local-notifications.git" /> -->
 </widget>

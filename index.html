@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
+  <!-- <meta name=”viewport” content=”initial-scale=1, width=device-width, height=device-height, viewport-fit=cover”> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover"> -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- Color de la status bar en Ios -->
   <meta name="theme-color" content="#99CC33">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
@@ -14,11 +16,11 @@
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/animations.css">
-  <script src="cordova.js"></script>
   <script src="libs/jquery/jquery.js"></script>
   <script src="libs/evothings/evothings.js"></script>
   <script src="libs/evothings/ui/ui.js"></script>
   <script src="app.js"></script>
+  <script src="cordova.js"></script>
 </head>
 <body class="theme-dark">
   <div id="app" class="page color-theme-orange">
@@ -44,7 +46,7 @@
                 </li>
                 <li>
                   <a href="/consumos/" class="panel-close button-raised consumos-list">
-                    <i class="icon f7-icons ios-only icon-ios-fill">folder</i>
+                    <i class="icon f7-icons ios-only icon-ios-fill">list_fill</i>
                     <i class="icon material-icons md-only">assignment</i>
                   	<span class="tabbar-label" style="margin-right: 105px; margin-top: 5px;">Historial</span></a>
                 </li>
@@ -57,7 +59,7 @@
                 </li>
                 <li>
                   <a href="/aviso-privacidad/" class="panel-close button-raised privacidad-list">
-                    <i class="icon f7-icons ios-only icon-ios-fill">contacts</i>
+                    <i class="icon f7-icons ios-only icon-ios-fill">document_fill</i>
                     <i class="icon material-icons md-only">contacts</i>
                     <span class="tabbar-label" style="margin-right: 22px; margin-top: 5px;">Aviso de privacidad</span>
                   </a>
@@ -99,7 +101,9 @@
             <span class="tabbar-label premios-icon">Premios</span>
           </a>
           <a href="#view-carrito" class="tab-link pedidos-icon">
-            <i class="icon material-icons">shopping_cart<span class="badge color-red"><span id="iconito" class="iconito">0</span></span></i>
+            <i class="icon f7-icons ios-only">bag<span class="badge color-red"><span class="iconito">0</span></span></i>
+            <i class="icon f7-icons ios-only icon-ios-fill">bag_fill<span class="badge color-red"><span class="iconito">0</span></span></i>
+            <i class="icon material-icons md-only">shopping_cart<span class="badge color-red"><span class="iconito">0</span></span></i>
             <span class="tabbar-label">Pedidos</span>
           </a>
           <a href="#view-settings" class="tab-link ayuda-icon">
@@ -133,7 +137,7 @@
                 <div class="block">
                   <div class="row">
                     <div class="col-33 tablet-33"><img src="" alt="" title="" width="94%"/></div>
-                    <div class="col-33 tablet-33 popup-open" data-popup=".demo-popup"><img src="images/check.png" alt="" title="" width="80%"/><h4>REGISTRAR VISITA</h4></div>
+                    <div class="col-33 tablet-33 popup-open btn-registrar-visita" data-popup=".demo-popup"><img src="images/check.png" alt="" title="" width="80%"/><h4>REGISTRAR VISITA</h4></div>
                     <div class="col-33 tablet-33"><img src="" alt="" title="" width="94%"/></div>
                   </div>
                 </div>
@@ -166,7 +170,17 @@
         </div>
         <div class="page-content">
           <div class="block">
-            <p id="warning">Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere ....</p>
+            <div id="warning">
+              <h3><center>Por favor asegurese que tiene encendido el bluetooth de su celular</center></h3>
+              Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere
+
+              <br>
+              <center>
+                <img src="images/loading.gif" width="20%">
+              </center>
+            </div>
+              <br>
+              <br>
               <!-- <div id="found-beacons" class="list virtual-list estimotes-list">
               </div> -->   
               <div id="capa-premio-ganado" class="capa-premio-ganado">
@@ -174,6 +188,7 @@
                 <a href="#" class="button button-small button-fill button-raised color-green canje-premio">Agregar puntos a mi cuenta</a>
               </center>
               </div>
+            </div>
           </div>
         </div>
       </div>
@@ -193,7 +208,7 @@
               <div class="block">
                 <div class="col">
                   <center>
-                    <button class="button button-fill button-big open-login">INICIAR SESION</button>
+                    <button class="button button-fill button-big open-login">INICIAR SESIÓN</button>
                     <p class="row"><br>
                       <p class="col button open-prompt color-red " style="color: white; font-size: 12px; text-transform: unset;">¿Olvidaste tu contraseña?</p><br>
                       <p class="col button open-reestablecer popup-open" data-popup=".popup-restore-key" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi cdigo para reestablecer contraseña</p><br>
@@ -225,7 +240,7 @@
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
-                <div class="item-title item-label ">Nombre de usuario</div>
+                <div class="item-title item-label">Nombre de usuario</div>
                 <div class="item-input-wrap">
                   <input type="text" class="nombre_registro" placeholder="Escribe tu nombre por favor"/>
                 </div>
@@ -292,7 +307,7 @@
               <li>
                 <div class="item-content item-input">
                   <div class="item-inner">
-                    <div class="item-title item-label ">E-mail</div>
+                    <div class="item-title item-label ">e-mail</div>
                     <div class="item-input-wrap">
                       <input type="email" class="txt_email_key_restore" placeholder="E-mail" />
                     </div>

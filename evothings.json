@@ -35,7 +35,7 @@
   "doc-url": "http://evothings.com/2.2/doc/examples/ibeacon-scan.html",
   "long-description": "chocolate boutique motel",
   "cordova-id": "com.evothings.examples.ibeaconscan",
-  "author-name": "Evothings",
+  "author-name": "Interlabs",
   "author-email": "build@evothings.com",
   "author-url": "https://evothings.com"
 }

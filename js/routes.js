@@ -12,6 +12,7 @@ routes = [
           app.request.post(serviceURL + "avisoPrivacidad.php", function (data) {
             $$('.contenido-aviso-privacidad').html(data);
           });
+
           app.request.post(serviceURL + "terminos.php", function (data) {
             $$('.contenido-terminos').html(data);
           });
@@ -19,7 +20,7 @@ routes = [
           // startScan();
           // updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
-          $('#capa-premio-ganado').hide();
+          $$('#capa-premio-ganado').hide();
           // Llenamos el aviso de privacidad
         }
       }
@@ -112,14 +113,15 @@ routes = [
           // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
           var posicion = e.target.f7VirtualListIndex;
           // app.dialog.alert("Eliminaste el elemento " + posicion);
-          var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+          
           if (posicion == 0) // Eliminaron el primer elemento de la lista
           {
-            // vamos a pasar el premio2 al premio1 y limpiar premios2
+            var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
             var Premio2 = localStorage.getItem("Premio2");
             var TipoPremio2 = localStorage.getItem("TipoPremio2");
             var Puntaje2 = localStorage.getItem("Puntaje2");
             var Cantidad2 = localStorage.getItem("Cantidad2");
+            // vamos a pasar el premio2 al premio1 y limpiar premios2
             localStorage.setItem("Premio1", Premio2);
             localStorage.setItem("TipoPremio1", TipoPremio2);
             localStorage.setItem("Puntaje1", Puntaje2);
@@ -148,13 +150,23 @@ routes = [
           }
           if (PuntajePedido == 0) {
             $$('.carrito-canje').addClass("disabled");
+            $$('.capa-boton-limipiar').hide();
           }
           actualizarBadge("menos");
         });
 
         $$('.carrito-canje').on('click', function () {
           realizarPedido('carrito');
+          limpiarListaPedido('.carrito-list');
           $$('.carrito-canje').addClass("disabled");
+          $$('.alerta-carrito').text("");
+          $$('.capa-boton-limipiar').hide();
+        });
+        $$('#btn-limpiar-carrito').on('click', function () {
+          // app.dialog.alert("Borrando pedido");
+          limpiarLocalStorage();
+          limpiarListaPedido('.carrito-list');
+          $$('.capa-boton-limipiar').hide();
         });
      }
     }
@@ -165,10 +177,10 @@ routes = [
     componentUrl: './pages/premios.html',
     on: {
       pageInit: function (event, page) {
-         actualizarListadoPremios('Habitacion', '.habitaciones-list');
-         actualizarListadoPremios('Barra', '.snack-list');
-         actualizarListadoPremios('Cocina', '.cocina-list');
-         actualizarListadoPremios('SexShop', '.sexshop-list');
+        actualizarListadoPremios('Barra', '.snack-list');
+        actualizarListadoPremios('Cocina', '.cocina-list');
+        actualizarListadoPremios('Habitacion', '.habitaciones-list');
+        actualizarListadoPremios('SexShop', '.sexshop-list');         
       }
     }
   },
@@ -178,208 +190,225 @@ routes = [
     name: 'pedido',
     on: {
       pageInit: function (event, page) {
-         if (page.route.name == 'pedido') {
-           var PedidoHoy = ultimoPedido();
-           if (!PedidoHoy)
-           { 
-            var vIdPremio = localStorage.getItem("IdPremioGlobal");
-            var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
-            var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
-            var Cantidad = app.stepper.getValue('.stepper-pedido');
-            $$('.PuntajeUsuarioPedido').text(vPuntajeUsuario);
-            // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
-            var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
-            app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
-            var info = JSON.parse(data);
-            var elemento =[];
-            var Premio1 = localStorage.getItem("Premio1");
-            var TipoPremio1 = localStorage.getItem("TipoPremio1");
-            var Puntaje1 = parseInt(localStorage.getItem("Puntaje1"));
-            var Cantidad1 = parseInt(localStorage.getItem("Cantidad1"));
-            var Premio2 = localStorage.getItem("Premio2");
-            var TipoPremio2 = localStorage.getItem("TipoPremio2");
-            var Puntaje2 = parseInt(localStorage.getItem("Puntaje2"));
-            var Cantidad2 = parseInt(localStorage.getItem("Cantidad2"));
-            // Verificamos que se pueda agrear el elemento actual elegido por el usuario
-            if ((Cantidad1 + Cantidad) > 2)
-            {
-              app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo", "Advertencia");
-              if (Premio1!= "")
-              {
-                elemento.push({
-                  Premio: Cantidad1 + " x " + Premio1,
-                  Puntos: Cantidad1 * Puntaje1
-                })
-              }
-              if (Premio2 != "")
-              {
-                elemento.push({
-                  Premio: Cantidad2 + " x " + Premio2,
-                  Puntos: Cantidad2 * Puntaje2
-                })
-              }
-            }
-            else if (Premio1 == "" && Premio2 == "")  // Como está vacias esas variables, significa que es el primer elemento que eligen.
+        if (page.route.name == 'pedido') {
+          var vPuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+          $$('#PuntajeUsuarioPedido').text(vPuntajeUsuario);
+           serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+           var fechaActual = fechaHoy();
+           var vIdUsuario = localStorage.getItem('IdUsuario');
+          //  app.dialog.alert("La fecha de hoy: " + fechaActual);
+           app.request.post(serviceURL + "ultimoPedido.php", {
+             fecha: fechaActual,
+             IdUsuario: vIdUsuario
+            }, function (data) {
+              var respuesta = data;
+              if (respuesta!="1")
             { 
-              $$('.iconito').text("1");
-              localStorage.setItem("Premio1", info.Premio);
-              localStorage.setItem("TipoPremio1", vTipoPremio);
-              localStorage.setItem("Puntaje1", info.Puntos);
-              localStorage.setItem("Cantidad1", Cantidad);
-              elemento.push({
-                Premio: Cantidad + " x " + info.Premio,
-                Puntos: Cantidad * info.Puntos
-              })
-            }
-            else if (Premio1 != "" && Premio2 == "") // Es el segudo elemento que insertan
-            { 
-              console.log("vTipoPremio");
-              console.log(vTipoPremio);
-              console.log("TipoPremio");
-              console.log(TipoPremio1);
-              if (vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion") //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
+              var vIdPremio = localStorage.getItem("IdPremioGlobal");
+              var vTipoPremio = localStorage.getItem("TipoPremioGlobal");
+              var Cantidad = app.stepper.getValue('.stepper-pedido');
+              // Hacemos la consulta al server para recibior de que premio se trata, cuantos puntos se requieren, 
+              var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+              app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
+                var info = JSON.parse(data);
+                var elemento =[];
+                var Premio1 = localStorage.getItem("Premio1");
+                var TipoPremio1 = localStorage.getItem("TipoPremio1");
+                var Puntaje1 = parseInt(localStorage.getItem("Puntaje1"));
+                var Cantidad1 = parseInt(localStorage.getItem("Cantidad1"));
+                var Premio2 = localStorage.getItem("Premio2");
+                var TipoPremio2 = localStorage.getItem("TipoPremio2");
+                var Puntaje2 = parseInt(localStorage.getItem("Puntaje2"));
+                var Cantidad2 = parseInt(localStorage.getItem("Cantidad2"));
+                // Si no tiene elementos en la lista, entonces ocultamos el botón
+              // Verificamos que se pueda agrear el elemento actual elegido por el usuario
+              if ((Cantidad1 + Cantidad) > 2)
               {
-                app.dialog.alert("No pueden entregarse 2 habitaciones en un mismo canje, por favor elija un elemento diferente.", "Advertencia");
-                // Mostrarmos el elemento anterior en la lista.
-                var PremioAnterior = localStorage.getItem("Premio1");
-                var PuntajeAnterior = localStorage.getItem("Puntaje1");
-                var CantidadAnterior = localStorage.getItem("Cantidad1");
-                elemento.push({
-                  Premio: CantidadAnterior + " x " + PremioAnterior,
-                  Puntos: CantidadAnterior * PuntajeAnterior
-                })
-              } 
-              else 
-              {
-                $$('.iconito').text("2");
-                var PremioAnterior = localStorage.getItem("Premio1");
-                var PuntajeAnterior = localStorage.getItem("Puntaje1");
-                var CantidadAnterior = localStorage.getItem("Cantidad1");
-                localStorage.setItem("Premio2", info.Premio);
-                localStorage.setItem("TipoPremio2", vTipoPremio);
-                localStorage.setItem("Puntaje2", info.Puntos);
-                localStorage.setItem("Cantidad2", Cantidad);
-                elemento.push({
-                  Premio: CantidadAnterior + " x " + PremioAnterior,
-                  Puntos: CantidadAnterior * PuntajeAnterior
-                })
+                app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo", "Advertencia");
+                if (Premio1!= "")
+                {
+                  elemento.push({
+                    Premio: Cantidad1 + " x " + Premio1,
+                    Puntos: Cantidad1 * Puntaje1
+                  })
+                }
+                if (Premio2 != "")
+                {
+                  elemento.push({
+                    Premio: Cantidad2 + " x " + Premio2,
+                    Puntos: Cantidad2 * Puntaje2
+                  })
+                }
+              }
+              else if (Premio1 == "" && Premio2 == "")  // Como está vacias esas variables, significa que es el primer elemento que eligen.
+              { 
+                $$('.iconito').text("1");
+                localStorage.setItem("Premio1", info.Premio);
+                localStorage.setItem("TipoPremio1", vTipoPremio);
+                localStorage.setItem("Puntaje1", info.Puntos);
+                localStorage.setItem("Cantidad1", Cantidad);
                 elemento.push({
                   Premio: Cantidad + " x " + info.Premio,
                   Puntos: Cantidad * info.Puntos
                 })
               }
-            }
-            else if (Premio1 != "" && Premio2!= "")
-            {
-              app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo","Advertencia");
-              elemento.push({
-                Premio: Cantidad1 + " x " + Premio1,
-                Puntos: Cantidad1 * Puntaje1
-              })
-              elemento.push({
-                Premio: Cantidad2 + " x " + Premio2,
-                Puntos: Cantidad2 * Puntaje2
-              })
-            }
+              else if (Premio1 != "" && Premio2 == "") // Es el segudo elemento que insertan
+              { 
+                console.log("vTipoPremio");
+                console.log(vTipoPremio);
+                console.log("TipoPremio");
+                console.log(TipoPremio1);
+                if (vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion") //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
+                {
+                  app.dialog.alert("No pueden entregarse 2 habitaciones en un mismo canje, por favor elija un elemento diferente.", "Advertencia");
+                  // Mostrarmos el elemento anterior en la lista.
+                  var PremioAnterior = localStorage.getItem("Premio1");
+                  var PuntajeAnterior = localStorage.getItem("Puntaje1");
+                  var CantidadAnterior = localStorage.getItem("Cantidad1");
+                  elemento.push({
+                    Premio: CantidadAnterior + " x " + PremioAnterior,
+                    Puntos: CantidadAnterior * PuntajeAnterior
+                  })
+                } 
+                else 
+                {
+                  $$('.iconito').text("2");
+                  var PremioAnterior = localStorage.getItem("Premio1");
+                  var PuntajeAnterior = localStorage.getItem("Puntaje1");
+                  var CantidadAnterior = localStorage.getItem("Cantidad1");
+                  localStorage.setItem("Premio2", info.Premio);
+                  localStorage.setItem("TipoPremio2", vTipoPremio);
+                  localStorage.setItem("Puntaje2", info.Puntos);
+                  localStorage.setItem("Cantidad2", Cantidad);
+                  elemento.push({
+                    Premio: CantidadAnterior + " x " + PremioAnterior,
+                    Puntos: CantidadAnterior * PuntajeAnterior
+                  })
+                  elemento.push({
+                    Premio: Cantidad + " x " + info.Premio,
+                    Puntos: Cantidad * info.Puntos
+                  })
+                }
+              }
+              else if (Premio1 != "" && Premio2!= "")
+              {
+                app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo","Advertencia");
+                elemento.push({
+                  Premio: Cantidad1 + " x " + Premio1,
+                  Puntos: Cantidad1 * Puntaje1
+                })
+                elemento.push({
+                  Premio: Cantidad2 + " x " + Premio2,
+                  Puntos: Cantidad2 * Puntaje2
+                })
+              }
 
-            // Calculamos la suma de puntos de de ambos elementos            
-            var PuntajePedido = calcularPuntajePedido();
-            $$('.SumaPuntos').text(PuntajePedido);
-            if (PuntajePedido == 0 )
-            {
-              $$('.pedido-canje').addClass("disabled");
-            }
-            if (PuntajePedido > vPuntajeUsuario)
-            {
-              $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
-              $$('.pedido-canje').addClass("disabled");
+              // Calculamos la suma de puntos de de ambos elementos            
+              var PuntajePedido = calcularPuntajePedido();
+              $$('.SumaPuntos').text(PuntajePedido);
+              if (PuntajePedido == 0 )
+              {
+                $$('.pedido-canje').addClass("disabled");
+              }
+              if (PuntajePedido > vPuntajeUsuario)
+              {
+                $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+                $$('.pedido-canje').addClass("disabled");
+              }
+              else
+              {
+                $$('.pedido-canje').removeClass("disabled");
+              }  
+              if (Premio1 != "")
+                $$('.capa-boton-limipiar').show();
+                app.virtualList.create({
+                // List Element
+                el: '.pedidos-list',
+                items: elemento,          
+                itemTemplate: 
+                '<li class="swipeout deleted-callback">' +
+                  '<a href="#" class="item-link item-content swipeout-content">' +
+                    '<div class="item-inner">' +
+                      '<div class="item-title-row">' +
+                        '<div class="item-title">{{Premio}}</div>' +
+                      '</div>' +
+                    '<div class="item-subtitle">{{Puntos}}</div>' +
+                    '</div>' +
+                    '<div class="swipeout-actions-right">' +
+                      '<a href="#" class="swipeout-delete">Borrar</a>' +
+                    '</div>' +
+                  '</a>' +
+                '</li>',
+                // Item height
+                // height: app.theme === 'ios' ? 63 : 73,
+              });
+              // Si eliminan un elemento de la lista.
+              $$('.pedidos-list').on('swipeout:deleted', function (e) {
+                // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
+                var posicion = e.target.f7VirtualListIndex;
+                // app.dialog.alert("Eliminaste el elemento de la vista de pedido: " + posicion);
+                if (posicion == 0) // Eliminaron el primer elemento de la lista
+                {
+                  // vamos a pasar el premio2 al premio1 y limpiar premios2
+                  var Premio2 = localStorage.getItem("Premio2");
+                  var TipoPremio2 = localStorage.getItem("TipoPremio2");
+                  var Puntaje2 = localStorage.getItem("Puntaje2");
+                  var Cantidad2 = localStorage.getItem("Cantidad2");
+                  localStorage.setItem("Premio1",Premio2); 
+                  localStorage.setItem("TipoPremio1",TipoPremio2); 
+                  localStorage.setItem("Puntaje1",Puntaje2); 
+                  localStorage.setItem("Cantidad1",Cantidad2); 
+                  localStorage.setItem("Premio2",""); 
+                  localStorage.setItem("TipoPremio2",""); 
+                  localStorage.setItem("Puntaje2",""); 
+                  localStorage.setItem("Cantidad2",""); 
+                }
+                else //Eliminaros el segundo elemento de la lista
+                {
+                  localStorage.setItem("Premio2", "");
+                  localStorage.setItem("TipoPremio2", "");
+                  localStorage.setItem("Puntaje2", "");
+                  localStorage.setItem("Cantidad2", "");
+                }
+                var PuntajePedido = calcularPuntajePedido();
+                
+                $$('.SumaPuntos').text(PuntajePedido.toLocaleString('es-ES'));
+                if (PuntajePedido > vPuntajeUsuario) {
+                  $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
+                  $$('.pedido-canje').addClass("disabled");
+                } else {
+                  $$('.pedido-canje').removeClass("disabled");
+                  $$('.AlertaPedido').text("");
+                }
+                if (PuntajePedido == 0)
+                {
+                  $$('.pedido-canje').addClass("disabled");
+                  $$('.capa-boton-limipiar').hide();
+                  $$('.AlertaPedido').text("");
+                }
+                actualizarBadge("menos");
+              });
+
+              $$('.pedido-canje').on('click', function () {
+                console.log("Clic en pedir caje");
+                realizarPedido('premios');
+                $$('.pedido-canje').addClass("disabled");
+                $$('.capa-boton-limipiar').hide();
+              });
+
+              $$('#btn-limpiar-pedido').on('click', function () {
+                limpiarLocalStorage();
+                limpiarListaPedido('.pedidos-list');
+                $$('.capa-boton-limipiar').hide();
+              });
+            });
             }
             else
             {
-              $$('.pedido-canje').removeClass("disabled");
-            }  
-
-            app.virtualList.create({
-              // List Element
-              el: '.pedidos-list',
-              items: elemento,          
-              itemTemplate: 
-              '<li class="swipeout deleted-callback">' +
-                '<a href="#" class="item-link item-content swipeout-content">' +
-                  '<div class="item-inner">' +
-                    '<div class="item-title-row">' +
-                      '<div class="item-title">{{Premio}}</div>' +
-                    '</div>' +
-                  '<div class="item-subtitle">{{Puntos}}</div>' +
-                  '</div>' +
-                  '<div class="swipeout-actions-right">' +
-                    '<a href="#" class="swipeout-delete">Borrar</a>' +
-                  '</div>' +
-                '</a>' +
-              '</li>',
-              // Item height
-              // height: app.theme === 'ios' ? 63 : 73,
-            });
-            // Si eliminan un elemento de la lista.
-            $$('.pedidos-list').on('swipeout:deleted', function (e) {
-              // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
-              var posicion = e.target.f7VirtualListIndex;
-              // app.dialog.alert("Eliminaste el elemento de la vista de pedido: " + posicion);
-              if (posicion == 0) // Eliminaron el primer elemento de la lista
-              {
-                // vamos a pasar el premio2 al premio1 y limpiar premios2
-                var Premio2 = localStorage.getItem("Premio2");
-                var TipoPremio2 = localStorage.getItem("TipoPremio2");
-                var Puntaje2 = localStorage.getItem("Puntaje2");
-                var Cantidad2 = localStorage.getItem("Cantidad2");
-                localStorage.setItem("Premio1",Premio2); 
-                localStorage.setItem("TipoPremio1",TipoPremio2); 
-                localStorage.setItem("Puntaje1",Puntaje2); 
-                localStorage.setItem("Cantidad1",Cantidad2); 
-                localStorage.setItem("Premio2",""); 
-                localStorage.setItem("TipoPremio2",""); 
-                localStorage.setItem("Puntaje2",""); 
-                localStorage.setItem("Cantidad2",""); 
-              }
-              else //Eliminaros el segundo elemento de la lista
-              {
-                localStorage.setItem("Premio2", "");
-                localStorage.setItem("TipoPremio2", "");
-                localStorage.setItem("Puntaje2", "");
-                localStorage.setItem("Cantidad2", "");
-              }
-              var PuntajePedido = calcularPuntajePedido();
-
-              $$('.SumaPuntos').text(PuntajePedido);
-              if (PuntajePedido > vPuntajeUsuario) {
-                $$('.AlertaPedido').text("No tienes puntos suficientes para este canje.");
-                $$('.pedido-canje').addClass("disabled");
-              } else {
-                $$('.pedido-canje').removeClass("disabled");
-                $$('.AlertaPedido').text("");
-              }
-              if (PuntajePedido == 0)
-              {
-                $$('.pedido-canje').addClass("disabled");
-              }
-              actualizarBadge("menos");
-            });
-
-            $$('.pedido-canje').on('click', function () {
-              console.log("Clic en pedir caje");
-              realizarPedido('premios');
-              $$('.pedido-canje').addClass("disabled");
-            });
-          
+              app.dialog.alert("Sólo se permite un pedido por dia, incluso si tiene puntos suficientes. Gracias Por su compresión");
+            }
           });
-          }
-          else
-          {
-            app.dialog.alert("Ya hiciste un pedido hoy, por favor intenta mañana");
-          }
         }
-        
-
       }
     },
     async: function (routeTo, routeFrom, resolve, reject) {
@@ -435,16 +464,23 @@ routes = [
     path: '/cambiarpass/',
     componentUrl: './pages/cambiarpass.html'
   },
-
   {
     path: '/product/:id/',
     componentUrl: './pages/product.html'
   },
   {
-    path: '/settings/',
-    url: './pages/settings.html'
+    path: '/ayuda/',
+    on: {
+      // Cambiamos el puntaje que se muestra en el detalle del premio en base a la cantidad elegida por el usuario
+      pageInit: function (e) {
+        var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
+        app.request.post(serviceURL + "ayuda.php", function (data) {
+          $$('.contenido-ayuda').html(data);
+        });
+      }
+    },
+    url: './pages/ayuda.html'
   },
-  // Page Loaders & Router
   {
     path: '/page-loader-template7/:user/:userId/:posts/:postId/',
     templateUrl: './pages/page-loader-template7.html'

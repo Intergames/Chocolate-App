@@ -9,9 +9,7 @@ var app = new Framework7({
     closeByBackdropClick: false,
   },
   dialog: {
-    // set default title for all dialog shortcuts
     title: 'Chocolate Boutique Motel',
-    // change default "OK" button text
     buttonOk: 'Aceptar',
     buttonCancel: 'Cancelar',
     usernamePlaceholder: 'Nombre de usuario',
@@ -163,16 +161,23 @@ function actualizarListaPedido(lista)
 } 
 
 function ganarPuntos(vIdUsuario, vPuntos, vHabitacion) {
-  app.request.post(serviceURL + "insertarPuntos.php", {
-    IdUsuario: vIdUsuario,
-    Puntos: vPuntos,
-    Habitacion: vHabitacion
-  }, function (data) {
-    app.dialog.alert(data, "Canje de premio");
-    // Tomamos los puntos de cuando inicio sesión, e incrementamos con vPuntos
+// Consultamos si no hay un puntaje en esa habitación
+var fechaActual = fechaHoy();
+var vIdUsuario = localStorage.getItem('IdUsuario');
+app.dialog.alert(vIdUsuario, "Id del usuario");
+app.dialog.alert(fechaActual, "Fecha Actual");
+app.request.post(serviceURL + "ultimoPuntaje.php", { fecha: fechaActual, IdUsuario: vIdUsuario, Habitacion: vHabitacion }, function (data) { 
+  app.dialog.alert(data, "Data último puntaje");
+  // Analizamos cuanto tiempo 
+  // if ()
+  // Le otorgamos los puntos por que no hay intentos en los últimos 15 minutos.
+
+  app.request.post(serviceURL + "insertarPuntos.php", {IdUsuario: vIdUsuario, Puntos: vPuntos, Habitacion: vHabitacion }, function (data) {
+    app.dialog.alert(data, "Acumulación de puntos");
     var puntajeActual = localStorage.getItem("PuntajeUsuario");
     localStorage.setItem("PuntajeUsuario", parseInt(puntajeActual) + parseInt(vPuntos));
-  });
+  }); 
+});
 }
 
 function realizarPedido(vista)
