@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:">
   <!-- <meta name=”viewport” content=”initial-scale=1, width=device-width, height=device-height, viewport-fit=cover”> -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover"> -->
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- Color de la status bar en Ios -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#99CC33">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <title>Chocolate Boutique Motel App</title>
-  <link rel="stylesheet" href="framework7/css/framework7.min.css">
+  <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/app.css">
-  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="framework7/css/framework7.min.css">
+  <!-- <script src="libs/evothings/evothings.js"></script>
+  <script src="libs/evothings/ui/ui.js"></script> -->
   <script src="libs/jquery/jquery.js"></script>
-  <script src="libs/evothings/evothings.js"></script>
-  <script src="libs/evothings/ui/ui.js"></script>
+  <!-- <script src="cordova.js"></script> -->
   <script src="app.js"></script>
-  <script src="cordova.js"></script>
 </head>
 <body class="theme-dark">
   <div id="app" class="page color-theme-orange">
@@ -141,7 +141,7 @@
                     <div class="col-33 tablet-33"><img src="" alt="" title="" width="94%"/></div>
                   </div>
                 </div>
-                </center>
+              </center>
             </div>
           </div>
         </div>
@@ -173,7 +173,6 @@
             <div id="warning">
               <h3><center>Por favor asegurese que tiene encendido el bluetooth de su celular</center></h3>
               Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere
-
               <br>
               <center>
                 <img src="images/loading.gif" width="20%">
@@ -188,10 +187,10 @@
                 <a href="#" class="button button-small button-fill button-raised color-green canje-premio">Agregar puntos a mi cuenta</a>
               </center>
               </div>
-            </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
     <!-- INICIO DE SESION -->
     <div class="popup demo-login">
@@ -204,17 +203,18 @@
         </div> 
         <div class="page-content">
           <div class="block">
-            <center><div class="usuario" ></div></center>
+            <center><div class="usuario"></div></center>
               <div class="block">
                 <div class="col">
                   <center>
                     <button class="button button-fill button-big open-login">INICIAR SESIÓN</button>
                     <p class="row"><br>
+                      <p class="col button color-orange popup-open" data-popup=".demo-registro" style="color: white; font-size: 12px; text-transform: unset;">¿No tienes cuenta? REGISTRATE</p>
+                      <br>
                       <p class="col button open-prompt color-red " style="color: white; font-size: 12px; text-transform: unset;">¿Olvidaste tu contraseña?</p><br>
-                      <p class="col button open-reestablecer popup-open" data-popup=".popup-restore-key" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi cdigo para reestablecer contraseña</p><br>
-                      <p class="col button color-green popup-open" data-popup=".demo-registro" style="color: white; font-size: 12px; text-transform: unset;">¿No tienes cuenta? REGISTRATE</p>
-                      <p class="col button color-green popup-open" data-popup="#popup-aviso-privacidad" style="color: white; font-size: 12px; text-transform: unset;">Aviso de privacidad</p>
-                      <p class="col button color-green popup-open" data-popup="#popup-terminos" style="color: white; font-size: 12px; text-transform: unset;">Terminos y condiciones</p>
+                      <p class="col button open-reestablecer popup-open color-red" data-popup=".popup-restore-key" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi código para reestablecer contraseña</p><br>
+                      <p class="col button color-green popup-open" data-popup="#popup-aviso-privacidad" style="color: white; font-size: 12px; text-transform: unset;">Aviso de privacidad</p><br>
+                      <p class="col button color-green popup-open" data-popup="#popup-terminos" style="color: white; font-size: 12px; text-transform: unset;">Términos y condiciones</p>
                     </p>
                   </center>
                 </div>

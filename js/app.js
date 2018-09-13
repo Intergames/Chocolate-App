@@ -645,7 +645,8 @@ function startScan() {
 
   // Request permission from user to access location info.
   // This is needed on iOS 8.
-  locationManager.requestAlwaysAuthorization();
+  // locationManager.requestAlwaysAuthorization();
+  locationManager.requestWhenInUseAuthorization();
 
   // Start monitoring and ranging beacons.
   for (var i in regions) {
