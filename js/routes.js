@@ -2,7 +2,7 @@ routes = [
   {
     path: '/',
     url: './index.html',
-    name: 'principal',
+    name: 'principal', 
     on:{
       pageInit: function (event,page) {
         if (page.route.name == 'principal')
@@ -57,9 +57,11 @@ routes = [
           var info = JSON.parse(data);
           if (info.Folio!="") {
             $$('#PedidoPendiente').text(info.Folio);
+            $$('.msg-fecha-pedido-pendiente').text("El día: "+info.Fecha);
           }
           else{
             $$('.msg-pedido-pendiente').text("No tiene ningun pedido pendiente");
+            $$('.msg-pedido-pendiente').text("");
           }
           console.log(info);
         });
@@ -211,6 +213,8 @@ routes = [
               var serviceURL = "http://www.chocolateboutiquemotel.com/sistema/app/servicios/";
               app.request.post(serviceURL + "detallePremio.php", { IdPremio: vIdPremio, TipoPremio: vTipoPremio}, function (data) {
                 var info = JSON.parse(data);
+                console.log("Esta es la info:");
+                console.log(info);
                 var elemento =[];
                 var Premio1 = localStorage.getItem("Premio1");
                 var TipoPremio1 = localStorage.getItem("TipoPremio1");
@@ -224,7 +228,7 @@ routes = [
               // Verificamos que se pueda agrear el elemento actual elegido por el usuario
               if ((Cantidad1 + Cantidad) > 2)
               {
-                app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo", "Advertencia");
+                app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 artículos como máximo", "Advertencia");
                 if (Premio1!= "")
                 {
                   elemento.push({
@@ -244,6 +248,8 @@ routes = [
               { 
                 $$('.iconito').text("1");
                 localStorage.setItem("Premio1", info.Premio);
+                console.log("Guardamos el Premio1:");
+                console.log(info.Premio);
                 localStorage.setItem("TipoPremio1", vTipoPremio);
                 localStorage.setItem("Puntaje1", info.Puntos);
                 localStorage.setItem("Cantidad1", Cantidad);
@@ -254,13 +260,9 @@ routes = [
               }
               else if (Premio1 != "" && Premio2 == "") // Es el segudo elemento que insertan
               { 
-                console.log("vTipoPremio");
-                console.log(vTipoPremio);
-                console.log("TipoPremio");
-                console.log(TipoPremio1);
-                if (vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion") //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
+                if ((vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion")) //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
                 {
-                  app.dialog.alert("No pueden entregarse 2 habitaciones en un mismo canje, por favor elija un elemento diferente.", "Advertencia");
+                  app.dialog.alert("No pueden entregarse 2 habitaciónes en un mismo canje o dos productos de cocina, por favor elija un elemento diferente.", "Advertencia");
                   // Mostrarmos el elemento anterior en la lista.
                   var PremioAnterior = localStorage.getItem("Premio1");
                   var PuntajeAnterior = localStorage.getItem("Puntaje1");
@@ -292,7 +294,7 @@ routes = [
               }
               else if (Premio1 != "" && Premio2!= "")
               {
-                app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 articulos como máximo","Advertencia");
+                app.dialog.alert("No se puede agregar este elemento a la lista, solo se permiten 2 artículos como máximo","Advertencia");
                 elemento.push({
                   Premio: Cantidad1 + " x " + Premio1,
                   Puntos: Cantidad1 * Puntaje1
@@ -318,30 +320,30 @@ routes = [
               else
               {
                 $$('.pedido-canje').removeClass("disabled");
-              }  
+              } 
+              console.log("Revistamos los elementos que se insertan en la lista virtual");
+              console.log(elemento); 
               if (Premio1 != "")
                 $$('.capa-boton-limipiar').show();
+              
                 app.virtualList.create({
-                // List Element
-                el: '.pedidos-list',
-                items: elemento,          
-                itemTemplate: 
-                '<li class="swipeout deleted-callback">' +
-                  '<a href="#" class="item-link item-content swipeout-content">' +
+                  el: '.pedidos-list',
+                  items: elemento,
+                  itemTemplate: '<li class="swipeout deleted-callback">' +
+                    '<a href="#" class="item-link item-content swipeout-content">' +
                     '<div class="item-inner">' +
-                      '<div class="item-title-row">' +
-                        '<div class="item-title">{{Premio}}</div>' +
-                      '</div>' +
+                    '<div class="item-title-row">' +
+                    '<div class="item-title">{{Premio}}</div>' +
+                    '</div>' +
                     '<div class="item-subtitle">{{Puntos}}</div>' +
                     '</div>' +
                     '<div class="swipeout-actions-right">' +
-                      '<a href="#" class="swipeout-delete">Borrar</a>' +
+                    '<a href="#" class="swipeout-delete">Borrar</a>' +
                     '</div>' +
-                  '</a>' +
-                '</li>',
-                // Item height
-                // height: app.theme === 'ios' ? 63 : 73,
-              });
+                    '</a>' +
+                    '</li>',
+                });
+              
               // Si eliminan un elemento de la lista.
               $$('.pedidos-list').on('swipeout:deleted', function (e) {
                 // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
@@ -488,7 +490,7 @@ routes = [
 
   {
     path: '/page-loader-component/:user/:userId/:posts/:postId/',
-    componentUrl: './pages/page-loader-component.html' 
+    componentUrl: './pages/page-loader-component.html'
   },
   // Default route (404 page). MUST BE THE LAST
   {
