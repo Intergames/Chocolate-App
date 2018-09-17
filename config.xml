@@ -10,6 +10,7 @@
         Interlabs
     </author>
 		<preference name='phonegap-version'     		value='cli-7.0.1'/>
+		<!-- <preference name='pgb-builder-version' 			value='2' /> -->
 		<preference name="webviewbounce" 						value="false"/>
 		<preference name="target-device" 						value="universal"/>
 		<preference name="fullscreen"       				value="true"/>
@@ -19,29 +20,29 @@
 		<!-- <preference name="SplashScreenDelay" 				value="3000" /> -->
     <content src="index.html" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
-    <icon src="/res/icon.png" />
-		<icon src="res/icon/android/icon-36m-ldpi.png"   								 gap:platform="android"    gap:density="ldpi" />
-		<icon src="res/icon/android/icon-48-mdpi.png"   								 gap:platform="android"    gap:density="mdpi" />
-		<icon src="res/icon/android/icon-72-hdpi.png"   								 gap:platform="android"    gap:density="hdpi" />
-		<icon src="res/icon/android/icon-96-xhdpi.png"  								 gap:platform="android"    gap:density="xhdpi" />
-		<icon src="res/icon/android/icon-144-xxhdpi.png"  							 gap:platform="android"    gap:density="xxhdpi" />
+    <icon src="/res/Icon.png" />
+		<icon src="res/icon/android/icon-36m-ldpi.png"   								 platform="android"    qualifier="ldpi" />
+		<icon src="res/icon/android/icon-48-mdpi.png"   								 platform="android"    qualifier="mdpi" />
+		<icon src="res/icon/android/icon-72-hdpi.png"   								 platform="android"    qualifier="hdpi" />
+		<icon src="res/icon/android/icon-96-xhdpi.png"  								 platform="android"    qualifier="xhdpi" />
+		<icon src="res/icon/android/icon-144-xxhdpi.png"  							 platform="android"    qualifier="xxhdpi" />
 		
-		<icon src="res/icon/ios/icon-57.png"            								 gap:platform="ios"        width="57" height="57" />
-		<icon src="res/icon/ios/icon-40.png"            								 gap:platform="ios"        width="40" height="40" />
-		<icon src="res/icon/ios/icon-60.png"            								 gap:platform="ios"        width="60" height="60" />		
-		<icon src="res/icon/ios/icon-72.png"            								 gap:platform="ios"        width="72" height="72" />
-		<icon src="res/icon/ios/icon-76.png"            								 gap:platform="ios"        width="76" height="76" />
-		<icon src="res/icon/ios/icon-57-2x.png"         								 gap:platform="ios"        width="114" height="114" />
-		<icon src="res/icon/ios/icon-60@2x.png"         								 gap:platform="ios"        width="120" height="120" />
-		<icon src="res/icon/ios/icon-72-2x.png"         								 gap:platform="ios"        width="144" height="144" />
-		<icon src="res/icon/ios/icon-76-2x.png"         								 gap:platform="ios"        width="152" height="152" />
+		<icon src="res/icon/ios/icon-57.png"            								 platform="ios"        width="57" height="57" />
+		<icon src="res/icon/ios/icon-40.png"            								 platform="ios"        width="40" height="40" />
+		<icon src="res/icon/ios/icon-60.png"            								 platform="ios"        width="60" height="60" />		
+		<icon src="res/icon/ios/icon-72.png"            								 platform="ios"        width="72" height="72" />
+		<icon src="res/icon/ios/icon-76.png"            								 platform="ios"        width="76" height="76" />
+		<icon src="res/icon/ios/icon-57-2x.png"         								 platform="ios"        width="114" height="114" />
+		<icon src="res/icon/ios/icon-60@2x.png"         								 platform="ios"        width="120" height="120" />
+		<icon src="res/icon/ios/icon-72-2x.png"         								 platform="ios"        width="144" height="144" />
+		<icon src="res/icon/ios/icon-76-2x.png"         								 platform="ios"        width="152" height="152" />
 
-		<gap:splash src="res/screen/android/screen-ldpi-portrait.png"  	 gap:platform="android" 	gap:density="ldpi" />
-		<gap:splash src="res/screen/android/screen-mdpi-portrait.png"  	 gap:platform="android" 	gap:density="mdpi" />
-		<gap:splash src="res/screen/android/screen-hdpi-portrait.png"  	 gap:platform="android" 	gap:density="hdpi" />
-		<gap:splash src="res/screen/android/screen-xhdpi-portrait.png" 	 gap:platform="android" 	gap:density="xhdpi" />
-		<gap:splash src="res/screen/android/screen-xxhdpi-portrait.png"  gap:platform="android" 	gap:density="xxhdpi" />
-		<gap:splash src="res/screen/android/screen-xxxhdpi-portrait.png" gap:platform="android" 	gap:density="xxxhdpi" />
+		<splash src="res/screen/android/screen-ldpi-portrait.png"  	 		 platform="android" 	qualifier="ldpi" />
+		<splash src="res/screen/android/screen-mdpi-portrait.png"  	 		 platform="android" 	qualifier="mdpi" />
+		<splash src="res/screen/android/screen-hdpi-portrait.png"  	 		 platform="android" 	qualifier="hdpi" />
+		<splash src="res/screen/android/screen-xhdpi-portrait.png" 	 		 platform="android" 	qualifier="xhdpi" />
+		<splash src="res/screen/android/screen-xxhdpi-portrait.png"  		 platform="android" 	qualifier="xxhdpi" />
+		<splash src="res/screen/android/screen-xxxhdpi-portrait.png" 		 platform="android" 	qualifier="xxxhdpi" />
 		
 		<splash src="res/screen/ios/Default@2x~universal~anyany.jpg" />
 
