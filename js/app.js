@@ -1,5 +1,5 @@
 // Dom7
-var $$ = Dom7; 
+var $$ = Dom7;
 var app = new Framework7({
   root: '#app', 
   id: 'com.interlabs.chocolateboutiquemotel', 
@@ -82,19 +82,11 @@ $$('.btn-registrar').on('click', function () {
   var vnombreRegistro = $$('.nombre_registro').val();
   var vemaiRegistro = $$('.email_registro').val();
   var vpassRegistro = $$('.pass_registro').val();
-  if (vnombreRegistro == "")
-    app.dialog.alert("Por favor escriba un nombre de usuario", "Registro de usuuario");
-  if (vemaiRegistro == "")
-    app.dialog.alert("Por favor escriba un correo electrónico vaiido", "Registro de usuuario");
-  if (vpassRegistro == "")
-    app.dialog.alert("Por favor escriba una contraseña", "Registro de usuario");
-  if (vnombreRegistro != "" && vemaiRegistro != "" && vpassRegistro!= "" )
-  {  
-    app.request.post(serviceURL + "insertarUsuario.php", { username: vnombreRegistro, psswrd: vpassRegistro, email: vemaiRegistro }, function (data) {
-      app.dialog.alert(data, "Registro de usuarios");
-      app.popup.close(".demo-registro", true);
-    });
-  }
+  // app.dialog.alert(vnombreRegistro, "Nombre de registro");
+  app.request.post(serviceURL + "insertarUsuario.php", { username: vnombreRegistro, psswrd: vpassRegistro, email: vemaiRegistro }, function (data) {
+    app.dialog.alert(data, "Registro de usuarios");
+    app.popup.close(".demo-registro", true);
+  });
 });
 
 $$('.btn-new-pass').on('click', function () {
@@ -122,7 +114,7 @@ $$('.btn-registrar-visita').on('click', function () {
     "Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere <br>" +
     "<br ><center ><img src = 'images/loading.gif' width = '20%'></center>"
   );
-  // localStorage.setItem("tipoEstimote", "");
+  localStorage.setItem("tipoEstimote", "");
   localStorage.setItem("puntaje", "");
   timeNow = Date.now();
 });
@@ -172,22 +164,19 @@ function ganarPuntos(vIdUsuario, vPuntos, vHabitacion) {
 // Consultamos si no hay un puntaje en esa habitación
 var fechaActual = fechaHoy();
 var vIdUsuario = localStorage.getItem('IdUsuario');
+app.dialog.alert(vIdUsuario, "Id del usuario");
+app.dialog.alert(fechaActual, "Fecha Actual");
 app.request.post(serviceURL + "ultimoPuntaje.php", { fecha: fechaActual, IdUsuario: vIdUsuario, Habitacion: vHabitacion }, function (data) { 
-  if (data != "")
-  {
-    app.dialog.alert(data, "Data último puntaje");
-  }
-  // Analizamos cuanto tiempo pasa entre acciones de los usuarios
-  app.popup.close(".demo-popup", true); 
-  if (data != "Solo se pueden acumular puntos en el hotel una vez por día" && data != "No se pueden acumular puntos en esta habitación en este momento, solo se permite acumar puntos a un solo usuario por habitación")
-  {
-    app.request.post(serviceURL + "insertarPuntos.php", {IdUsuario: vIdUsuario, Puntos: vPuntos, Habitacion: vHabitacion }, function (data) {
-      app.dialog.alert(data, "¡Felicidades!");
-      var puntajeActual = localStorage.getItem("PuntajeUsuario");
-      localStorage.setItem("PuntajeUsuario", parseInt(puntajeActual) + parseInt(vPuntos));
-      app.popup.close(".demo-popup", true);
-    }); 
-  }
+  app.dialog.alert(data, "Data último puntaje");
+  // Analizamos cuanto tiempo 
+  // if ()
+  // Le otorgamos los puntos por que no hay intentos en los últimos 15 minutos.
+
+  app.request.post(serviceURL + "insertarPuntos.php", {IdUsuario: vIdUsuario, Puntos: vPuntos, Habitacion: vHabitacion }, function (data) {
+    app.dialog.alert(data, "Acumulación de puntos");
+    var puntajeActual = localStorage.getItem("PuntajeUsuario");
+    localStorage.setItem("PuntajeUsuario", parseInt(puntajeActual) + parseInt(vPuntos));
+  }); 
 });
 }
 
@@ -445,8 +434,7 @@ var regions =
     { uuid: '5FAA6EE5-8FBD-4C82-9C38-E9BF7789E46F' }, // Verde Sencilla 21
     { uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D' }, // Verde Sencilla 22
     { uuid: 'F6CE6C6D-860B-4247-A370-A32C5421802D' }, // Verde Peatonal 23 24
-    { uuid: '65F3BC6C-F5BF-46DF-A58B-8CB3E449FB9C' }, // Morado Sencilla 25 26
-    { uuid: 'F98881F6-EBD5-4E8D-9016-736C4A777BAC' }, // Azul Fiestera 69
+    { uuid: 'F98881F6-EBD5-4E8D-9016-736C4A777BAC' }, // Morado Sencilla 25 26
   ];
 
 // Background detection.
@@ -465,6 +453,8 @@ $$('.premios-icon').on('click', function () {
   // actualizarListadoPremios('Barra', '.snack-list');
   // actualizarListadoPremios('Cocina', '.cocina-list');
   // actualizarListadoPremios('SexShop', '.sexshop-list');
+
+  
   // Cuando le dan clic al icono, construimos la lista virtual y mensajes segun sea el caso
   var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
   $$('#PuntajeUsuarioPedido').text(PuntajeUsuario);

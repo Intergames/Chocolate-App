@@ -8,16 +8,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <!-- <meta name="theme-color" content="#99CC33"> --> 
+  <meta name="theme-color" content="#99CC33">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <title>Chocolate Boutique Motel App</title>
-  <link rel="stylesheet" href="framework7/css/framework7.min.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/app.css">
-  <script src="libs/evothings/evothings.js"></script>
-  <script src="libs/evothings/ui/ui.js"></script>
+  <link rel="stylesheet" href="framework7/css/framework7.min.css">
+  <!-- <script src="libs/evothings/evothings.js"></script>
+  <script src="libs/evothings/ui/ui.js"></script> -->
   <script src="libs/jquery/jquery.js"></script>
   <!-- <script src="cordova.js"></script> -->
   <script src="app.js"></script>
@@ -164,7 +164,7 @@
       <div class="page">
         <div class="navbar">
           <div class="navbar-inner">
-            <div class="title">Visita</div>
+            <div class="title">Chocolate Boutique Motel</div>
             <div class="right"><a href="#" class="link popup-close">Cerrar</a></div>
           </div>
         </div>
@@ -235,7 +235,6 @@
   <div class="page-content">
   <div class="block text-align-center">
       <div class="block-title">Llena los siguientes campos</div>
-      <br>
       <div class="list ">
         <ul>
           <li>
@@ -243,7 +242,7 @@
               <div class="item-inner">
                 <div class="item-title item-label">Nombre de usuario</div>
                 <div class="item-input-wrap">
-                  <input type="text" class="nombre_registro" placeholder="Escribe un nombre de usuario"/>
+                  <input type="text" class="nombre_registro" placeholder="Escribe tu nombre por favor"/>
                 </div>
               </div>
             </div>
@@ -253,7 +252,7 @@
               <div class="item-inner">
                 <div class="item-title item-label ">E-mail</div>
                 <div class="item-input-wrap">
-                  <input type="email" class="email_registro" placeholder="Tú correo electrónico"/>
+                  <input type="email" class="email_registro" placeholder="E-mail"/>
                 </div>
               </div>
             </div>
@@ -261,9 +260,9 @@
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
-                <div class="item-title item-label pedidos-list">Contraseña</div>
+                <div class="item-title item-labelpedidos-list">Contraseña</div>
                 <div class="item-input-wrap">
-                  <input type="password" class="pass_registro" placeholder="Tu contraseña"/>
+                  <input type="password" class="pass_registro" placeholder="Password"/>
                 </div>
               </div>
             </div>
@@ -298,16 +297,6 @@
               <li>
                 <div class="item-content item-input">
                   <div class="item-inner">
-                    <div class="item-title item-label ">e-mail</div>
-                    <div class="item-input-wrap">
-                      <input type="email" class="txt_email_key_restore" placeholder="E-mail" />
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div class="item-content item-input">
-                  <div class="item-inner">
                     <div class="item-title item-label ">Clave enviada por correo</div>
                     <div class="item-input-wrap">
                       <input type="text" class="txt_key_restore" placeholder="Escribe por favor los 6 digitos enviados a su correo electrónico" />
@@ -318,9 +307,19 @@
               <li>
                 <div class="item-content item-input">
                   <div class="item-inner">
+                    <div class="item-title item-label ">e-mail</div>
+                    <div class="item-input-wrap">
+                      <input type="email" class="txt_email_key_restore" placeholder="E-mail" />
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                  <div class="item-inner">
                     <div class="item-title item-label ">Nueva contaraseña</div>
                     <div class="item-input-wrap">
-                      <input type="password" class="txt_new_pass" placeholder="Escriba su nueva contraseña" />
+                      <input type="password" class="txt_new_pass" placeholder="Por favor escriba la que seria su nueva contraseña" />
                     </div>
                   </div>
                 </div>
