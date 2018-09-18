@@ -16,9 +16,9 @@ routes = [
           app.request.post(serviceURL + "terminos.php", function (data) {
             $$('.contenido-terminos').html(data);
           });
-          // window.locationManager = cordova.plugins.locationManager;
-          // startScan();
-          // updateTimer = setInterval(displayBeaconList, 500);
+          window.locationManager = cordova.plugins.locationManager;
+          startScan();
+          updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
           $$('#capa-premio-ganado').hide();
           // Llenamos el aviso de privacidad
@@ -253,6 +253,7 @@ routes = [
                 localStorage.setItem("TipoPremio1", vTipoPremio);
                 localStorage.setItem("Puntaje1", info.Puntos);
                 localStorage.setItem("Cantidad1", Cantidad);
+                localStorage.setItem("Cantidad1", Cantidad);
                 elemento.push({
                   Premio: Cantidad + " x " + info.Premio,
                   Puntos: Cantidad * info.Puntos
@@ -260,7 +261,7 @@ routes = [
               }
               else if (Premio1 != "" && Premio2 == "") // Es el segudo elemento que insertan
               { 
-                if ((vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion")) //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
+                if ((vTipoPremio == "Habitacion" && TipoPremio1 == "Habitacion") || (vTipoPremio == "Cocina" && TipoPremio1 == "Cocina")) //Rechazamos por que el  usuario no puede elegir 2 habitaciones como canje
                 {
                   app.dialog.alert("No pueden entregarse 2 habitaciónes en un mismo canje o dos productos de cocina, por favor elija un elemento diferente.", "Advertencia");
                   // Mostrarmos el elemento anterior en la lista.
@@ -392,7 +393,6 @@ routes = [
               });
 
               $$('.pedido-canje').on('click', function () {
-                console.log("Clic en pedir caje");
                 realizarPedido('premios');
                 $$('.pedido-canje').addClass("disabled");
                 $$('.capa-boton-limipiar').hide();
