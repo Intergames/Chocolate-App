@@ -120,10 +120,12 @@ $$('.btn-registrar-visita').on('click', function () {
     "<h3><center> Por favor asegurese que tiene encendido el bluetooth de su celular </center></h3>"+
     "Estamos analizando si usted esta dentro de una habitacion de chocolate Boutique Motel por favor espere <br>" +
     "<br ><center ><img src = 'images/loading.gif' width = '20%'></center>"
-  );
-  // localStorage.setItem("tipoEstimote", "");
-  localStorage.setItem("puntaje", "");
-  timeNow = Date.now();
+    );
+    // localStorage.setItem("tipoEstimote", "");
+    $$('.canjePremio').removeClass('disable');
+    localStorage.setItem("puntaje", "");
+    timeNow = Date.now();
+    app.dialog.alert("Por favor encienda el bluetooth de su celular, es necesario para poder acumular puntos por estancia en el Motel");
 });
 
 $$('.cerrar-sesion').on('click', function () {
@@ -172,17 +174,17 @@ function ganarPuntos(vIdUsuario, vPuntos, vHabitacion) {
 var fechaActual = fechaHoy();
 var vIdUsuario = localStorage.getItem('IdUsuario');
 app.request.post(serviceURL + "ultimoPuntaje.php", { fecha: fechaActual, IdUsuario: vIdUsuario, Habitacion: vHabitacion }, function (data) { 
-  app.dialog.alert(data, "Data último puntaje");
-  if (data != "") {
-    app.dialog.alert(data, "Data último puntaje");
-  }
-  // Analizamos cuanto tiempo pasa entre acciones de los usuarios
   app.popup.close(".demo-popup", true);
-  if (data != "Solo se pueden acumular puntos en el hotel una vez por día" && data != "No se pueden acumular puntos en esta habitación en este momento, solo se permite acumar puntos a un solo usuario por habitación") {
+  if (data != "" && data != "Ok") {
+    app.dialog.alert(data, "Acumulación de puntos");
+  }
+  else if (data == "Ok") {
     app.request.post(serviceURL + "insertarPuntos.php", { IdUsuario: vIdUsuario, Puntos: vPuntos, Habitacion: vHabitacion }, function (data) {
       app.dialog.alert(data, "¡Felicidades!");
       var puntajeActual = localStorage.getItem("PuntajeUsuario");
       localStorage.setItem("PuntajeUsuario", parseInt(puntajeActual) + parseInt(vPuntos));
+      localStorage.setItem("tipoEstimote","");
+      $$('.canjePremio').addClass('disabled');
       app.popup.close(".demo-popup", true);
     });
     } 
@@ -349,7 +351,7 @@ function actualizarListadoPremios(pTipoPremio, elList) {
         '<div class="col-50 tablet-50"><br>' +
         '</div>' +
         '</div>' +
-        '<div class="col-50 tablet-50" style="margin-top: 3px;"><br>' +
+        '<div class="col-50 tablet-50"  style="margin-top: 3px;"><br>' +
         '<a href="/detallePremio/Id/{{IdPremio}}/TipoPremio/{{TipoPremio}}/" class="button button-small button-fill button-raised color-green link" @click="showToastCenter">Agregar a pedido</a>' +
         '</div>' + 
         '</div>' +
@@ -442,8 +444,10 @@ var regions =
     { uuid: '6DE738C0-3863-4BAD-99DC-A68359186081' }, // Azul Sencilla 20
     { uuid: '5FAA6EE5-8FBD-4C82-9C38-E9BF7789E46F' }, // Verde Sencilla 21
     { uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D' }, // Verde Sencilla 22
-    { uuid: 'F6CE6C6D-860B-4247-A370-A32C5421802D' }, // Verde Peatonal 23 24
-    { uuid: '65F3BC6C-F5BF-46DF-A58B-8CB3E449FB9C' }, // Morado Sencilla 25 26
+    { uuid: '47180E73-B1D7-28DE-1602-7C538E90B8FA' }, // Morado Peatonal 23
+    { uuid: 'F8EE48BB-D594-A69E-3E15-E69934CB062F' }, // Azul Peatonal 24
+    { uuid: '2E88DBC4-D390-0844-061E-D15F77C97298' }, // Morado Sencilla 25
+    { uuid: 'F6CE6C6D-860B-4247-A370-A32C5421802D' }, // Verde Peatonal 26
     { uuid: 'F98881F6-EBD5-4E8D-9016-736C4A777BAC' }, // Azul Fiestera 69
   ];
 
@@ -708,8 +712,10 @@ function displayBeaconList() {
       var habitacion20 = '6DE738C0-3863-4BAD-99DC-A68359186081';
       var habitacion21 = '5FAA6EE5-8FBD-4C82-9C38-E9BF7789E46F';
       var habitacion22 = 'B9407F30-F5F8-466E-AFF9-25556B57FE6D';
-      var habitacion2324 = 'F6CE6C6D-860B-4247-A370-A32C5421802D';
-      var habitacion2526 = '65F3BC6C-F5BF-46DF-A58B-8CB3E449FB9C';
+      var habitacion23 = '47180E73-B1D7-28DE-1602-7C538E90B8FA';
+      var habitacion24 = 'F8EE48BB-D594-A69E-3E15-E69934CB062F';
+      var habitacion25 = '2E88DBC4-D390-0844-061E-D15F77C97298';
+      var habitacion26 = 'F6CE6C6D-860B-4247-A370-A32C5421802D';
       var habitacion69 = 'F98881F6-EBD5-4E8D-9016-736C4A777BAC';
       
       // if ((beacon.uuid === habitacion1.toLowerCase() || beacon.uuid === habitacion1) && beacon.proximity === 'ProximityNear') // Morado
@@ -805,13 +811,21 @@ function displayBeaconList() {
       {
         tipoEstimote = "Sencilla 22";
       }
-      if (beacon.uuid === habitacion2324.toLowerCase() || beacon.uuid === habitacion2324) // Morado
+      if (beacon.uuid === habitacion23.toLowerCase() || beacon.uuid === habitacion23) // Morado
       {
-        tipoEstimote = "Peatonal 23 o 24";
+        tipoEstimote = "Peatonal 23";
       }
-      if (beacon.uuid === habitacion2526.toLowerCase() || beacon.uuid === habitacion2526) // Morado
+      if (beacon.uuid === habitacion24.toLowerCase() || beacon.uuid === habitacion24) // Morado
       {
-        tipoEstimote = "Peatonal 25 o 26";
+        tipoEstimote = "Peatonal 24";
+      }
+      if (beacon.uuid === habitacion25.toLowerCase() || beacon.uuid === habitacion25) // Morado
+      {
+        tipoEstimote = "Peatonal 25";
+      }
+      if (beacon.uuid === habitacion26.toLowerCase() || beacon.uuid === habitacion26) // Morado
+      {
+        tipoEstimote = "Peatonal 26";
       }
       if (beacon.uuid === habitacion69.toLowerCase() || beacon.uuid === habitacion69) // Morado
       {

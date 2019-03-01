@@ -59,16 +59,16 @@
         </config-file>
 
         <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
-            <string>This app would like to scan for iBeacons even when in the background.</string>
+            <string>Esta app utilizará sensores de proximidad en segundo plano</string>
         </config-file>
         <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
-            <string>This app would like to scan for iBeacons while it is in use.</string>
+            <string>Esta app utilizará sensores de proximidad mientras este en uso</string>
         </config-file>
         <config-file target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription">
-            <string>This app would like to scan for iBeacons.</string>
+            <string>Esta app utilizará sensores de proximidad</string>
         </config-file>
         <config-file target="*-Info.plist" parent="NSLocationAlwaysAndWhenInUseUsageDescription">
-            <string>This app would like to scan for iBeacons both while in use and while in the background.</string>
+            <string>Esta app utilizará sensores de proximidad en segundo plano y estando en uso</string>
         </config-file>
 
         <header-file src="src/ios/CDVLocationManager.h"/>

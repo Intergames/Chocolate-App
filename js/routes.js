@@ -16,8 +16,8 @@ routes = [
           app.request.post(serviceURL + "terminos.php", function (data) {
             $$('.contenido-terminos').html(data);
           });
-          window.locationManager = cordova.plugins.locationManager;
-          startScan();
+          // window.locationManager = cordova.plugins.locationManager;
+          // startScan();
           updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
           $$('#capa-premio-ganado').hide();
@@ -305,7 +305,7 @@ routes = [
                   Puntos: Cantidad2 * Puntaje2
                 })
               }
-
+              
               // Calculamos la suma de puntos de de ambos elementos            
               var PuntajePedido = calcularPuntajePedido();
               $$('.SumaPuntos').text(PuntajePedido);
@@ -325,26 +325,26 @@ routes = [
               console.log("Revistamos los elementos que se insertan en la lista virtual");
               console.log(elemento); 
               if (Premio1 != "")
-                $$('.capa-boton-limipiar').show();
+              $$('.capa-boton-limipiar').show();
               
-                app.virtualList.create({
+              app.virtualList.create({
                   el: '.pedidos-list',
                   items: elemento,
                   itemTemplate: '<li class="swipeout deleted-callback">' +
-                    '<a href="#" class="item-link item-content swipeout-content">' +
-                    '<div class="item-inner">' +
-                    '<div class="item-title-row">' +
-                    '<div class="item-title">{{Premio}}</div>' +
-                    '</div>' +
-                    '<div class="item-subtitle">{{Puntos}}</div>' +
-                    '</div>' +
-                    '<div class="swipeout-actions-right">' +
-                    '<a href="#" class="swipeout-delete">Borrar</a>' +
-                    '</div>' +
-                    '</a>' +
-                    '</li>',
+                  '<a href="#" class="item-link item-content swipeout-content">' +
+                  '<div class="item-inner">' +
+                  '<div class="item-title-row">' +
+                  '<div class="item-title">{{Premio}}</div>' +
+                  '</div>' +
+                  '<div class="item-subtitle">{{Puntos}}</div>' +
+                  '</div>' +
+                  '<div class="swipeout-actions-right">' +
+                  '<a href="#" class="swipeout-delete">Borrar</a>' +
+                  '</div>' +
+                  '</a>' +
+                  '</li>',
                 });
-              
+                
               // Si eliminan un elemento de la lista.
               $$('.pedidos-list').on('swipeout:deleted', function (e) {
                 // Vamos a actualizar los puntos del canje y el mensaje de alerta (Si es el caso)
@@ -391,23 +391,26 @@ routes = [
                 }
                 actualizarBadge("menos");
               });
-
+              
               $$('.pedido-canje').on('click', function () {
                 realizarPedido('premios');
                 $$('.pedido-canje').addClass("disabled");
                 $$('.capa-boton-limipiar').hide();
               });
-
+              
               $$('#btn-limpiar-pedido').on('click', function () {
                 limpiarLocalStorage();
                 limpiarListaPedido('.pedidos-list');
                 $$('.capa-boton-limipiar').hide();
               });
             });
-            }
-            else
-            {
+          }
+          else
+          {
               app.dialog.alert("Sólo se permite un pedido por dia, incluso si tiene puntos suficientes. Gracias Por su compresión");
+              $$('.pedido-canje').addClass("disabled");
+              $$('.SumaPuntos').text("0");
+              $$('.capa-boton-limipiar').hide();
             }
           });
         }

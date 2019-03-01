@@ -20,7 +20,7 @@
   <script src="libs/evothings/ui/ui.js"></script>
   <script src="libs/jquery/jquery.js"></script>
   <script src="app.js"></script>
-  <script src="cordova.js"></script>
+  <!-- <script src="cordova.js"></script> -->
 </head>
 <body class="theme-dark">
   <div id="app" class="page color-theme-orange">
@@ -198,7 +198,7 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="title"></div>
-            <div class="right"><a href="#" id="cerrar-login" class="link cerrar-login">Cerrar</a></div>
+            <!-- <div class="right"><a href="#" id="cerrar-login" class="link cerrar-login">Cerrar</a></div> -->
           </div>
         </div> 
         <div class="page-content">
@@ -209,8 +209,7 @@
                   <center>
                     <button class="button button-fill button-big open-login">INICIAR SESIÓN</button>
                     <p class="row"><br>
-                      <p class="col button color-orange popup-open" data-popup=".demo-registro" style="color: white; font-size: 12px; text-transform: unset;">¿No tienes cuenta? REGISTRATE</p>
-                      <br>
+                      <p class="col button color-orange popup-open" data-popup=".demo-registro" style="color: white; font-size: 12px; text-transform: unset;">¿No tienes cuenta? REGISTRATE</p><br>
                       <p class="col button open-prompt color-red " style="color: white; font-size: 12px; text-transform: unset;">¿Olvidaste tu contraseña?</p><br>
                       <p class="col button open-reestablecer popup-open color-red" data-popup=".popup-restore-key" style="color: white; font-size: 12px; text-transform: unset;">Ya tengo mi código para reestablecer contraseña</p><br>
                       <p class="col button color-green popup-open" data-popup="#popup-aviso-privacidad" style="color: white; font-size: 12px; text-transform: unset;">Aviso de privacidad</p><br>
@@ -240,9 +239,9 @@
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
-                <div class="item-title item-label">Nombre de usuario</div>
+                <div class="item-title item-label ">E-mail</div>
                 <div class="item-input-wrap">
-                  <input type="text" class="nombre_registro" placeholder="Escribe tu nombre por favor"/>
+                  <input type="email" class="email_registro" placeholder="E-mail"/>
                 </div>
               </div>
             </div>
@@ -250,9 +249,9 @@
           <li>
             <div class="item-content item-input">
               <div class="item-inner">
-                <div class="item-title item-label ">E-mail</div>
+                <div class="item-title item-label">Nombre de usuario</div>
                 <div class="item-input-wrap">
-                  <input type="email" class="email_registro" placeholder="E-mail"/>
+                  <input type="text" class="nombre_registro" placeholder="Escribe tu nombre por favor"/>
                 </div>
               </div>
             </div>
