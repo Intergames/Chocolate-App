@@ -82,7 +82,10 @@ routes = [
           var PuntajeUsuario = info.Puntos;
           localStorage.setItem("PuntajeUsuario", info.Puntos);
           console.log("Este el puntaje traido del server " + PuntajeUsuario);
+          if (PuntajeUsuario != "" || PuntajeUsuario != undefined || PuntajeUsuario != null )
           $$('.PuntajeUsuario').text(PuntajeUsuario);
+          else
+          $$('.PuntajeUsuario').text("Se requiere una conexión a internet para poder consultar su puntaje.");
         });  
         }
       }
