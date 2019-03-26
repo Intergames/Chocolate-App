@@ -288,6 +288,7 @@ function limpiarLocalStorage()
   localStorage.setItem("IdPremioGlobal", "");
   localStorage.setItem("TipoPremioGlobal","");
   localStorage.setItem("PuntosPremioActual", "");
+  localStorage.setItem("PuntajeUsuario", "");
   // console.log("Se limpiaron las variables globales");
   $$('.iconito').text("0");
 }
@@ -458,6 +459,7 @@ var inBackground = false;
 $$('.canje-premio').on('click', function () {
   var vIdUsuario = localStorage.getItem("IdUsuario");
   var vPuntaje = localStorage.getItem("puntaje");
+  // Si el puntaje 
   var vTipoEstimote = localStorage.getItem("tipoEstimote");
   ganarPuntos(vIdUsuario,vPuntaje,vTipoEstimote);
 }); 

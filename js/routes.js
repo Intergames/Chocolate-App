@@ -74,8 +74,16 @@ routes = [
     url: './pages/puntaje.html',
     on: {
       pageInit: function (event, page) {
-          var PuntajeUsuario = localStorage.getItem("PuntajeUsuario");
+        var vId = localStorage.getItem("IdUsuario");
+        app.request.post(serviceURL + "consultaPuntos.php", {
+          IdUsuario: vId,
+        }, function (data) {
+          var info = JSON.parse(data);
+          var PuntajeUsuario = info.Puntos;
+          localStorage.setItem("PuntajeUsuario", info.Puntos);
+          console.log("Este el puntaje traido del server " + PuntajeUsuario);
           $$('.PuntajeUsuario').text(PuntajeUsuario);
+        });  
         }
       }
   },
