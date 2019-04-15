@@ -16,8 +16,8 @@ routes = [
           app.request.post(serviceURL + "terminos.php", function (data) {
             $$('.contenido-terminos').html(data);
           });
-          // window.locationManager = cordova.plugins.locationManager;
-          // startScan();
+          window.locationManager = cordova.plugins.locationManager;
+          startScan();
           updateTimer = setInterval(displayBeaconList, 500);
           app.popup.open(".demo-login", false);
           $$('#capa-premio-ganado').hide();
@@ -83,10 +83,10 @@ routes = [
           localStorage.setItem("PuntajeUsuario", info.Puntos);
           console.log("Este el puntaje traido del server " + PuntajeUsuario);
           if (PuntajeUsuario != "" || PuntajeUsuario != undefined || PuntajeUsuario != null )
-          $$('.PuntajeUsuario').text(PuntajeUsuario);
-          else
-          $$('.PuntajeUsuario').text("Se requiere una conexión a internet para poder consultar su puntaje.");
-        });  
+            $$('.PuntajeUsuario').text(PuntajeUsuario);
+          }, function (xhr, status) {
+            app.dialog.alert("Se necesita una conexión a internet para consultar tu puntaje.");
+          });  
         }
       }
   },

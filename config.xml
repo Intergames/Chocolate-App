@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget xmlns     	= "http://www.w3.org/ns/widgets"
-        xmlns:gap 	= "http://phonegap.com/ns/1.0"
-				id          = "com.chocolateboutiquemotel.interlabs"
-        versionCode = "1" 
-        version     = "1.0.1" >
-    <name>Chocolate Boutique Motel</name>
+<widget xmlns   = "http://www.w3.org/ns/widgets"
+		xmlns:gap 	= "http://phonegap.com/ns/1.0"
+		id          = "com.chocolateboutiquemotel.com.chocolateboutiquemotel.interlabs"
+		versionCode = "19" 
+		version     = "1.0.18" >
+	<name>Chocolate Boutique Motel</name>
 		<description>Chocolate Boutique Motel - Puntos de recompensa para nuestros clientes frecuentes.</description>
-    <author email="contacto@interlabs.com.mx" href="http://www.interlabs.com.mx">
-      Interlabs
-    </author>
+	<author email="contacto@interlabs.com.mx" href="http://www.interlabs.com.mx">
+	  Interlabs
+	</author>
 		<!-- <preference name='phonegap-version' value='cli-7.0.1' /> -->
 		<preference name='phonegap-version' value='cli-7.1.0' />
 		<!-- <preference name='pgb-builder-version' value='1' />  -->
@@ -18,21 +18,21 @@
 		<preference name="DisallowOverscroll" 				value="true"/>
 		<preference name="StatusBarOverlaysWebView" 	value="true" />
 		<preference name="StatusBarStyle" 						value="blacktranslucent" />
-		<preference name="SplashScreenDelay" 					value="5000" />
+		<preference name="SplashScreenDelay" 					value="2500" />
 		<preference name="android-minSdkVersion" 			value="26" />
-  	<preference name="android-maxSdkVersion" 			value="28" />
-  	<preference name="android-targetSdkVersion" 	value="26" />
-    <content src="index.html" />
-    <plugin name="cordova-plugin-whitelist" spec="1" />
+		<preference name="android-maxSdkVersion" 			value="28" />
+		<preference name="android-targetSdkVersion" 	value="26" />
+		<content src="index.html" />
+		<plugin name="cordova-plugin-whitelist" spec="1" />
 		<plugin name="cordova-plugin-splashscreen" spec="https://github.com/apache/cordova-plugin-splashscreen.git" /> <!-- spec="^5.0.2" -->
 		<plugin name="cordova-plugin-statusbar" source="npm" />
-    <plugin name="cordova-plugin-eddystone" spec="^1.3.0" />
+		<plugin name="cordova-plugin-eddystone" spec="^1.3.0" />
 		<plugin name="cordova-plugin-inappbrowser" source="npm" />
-    <plugin name="com.unarin.cordova.beacon" /> <!-- spec="https://github.com/petermetz/cordova-plugin-ibeacon.git" -->
+		<plugin name="com.unarin.cordova.beacon" /> <!-- spec="https://github.com/petermetz/cordova-plugin-ibeacon.git" -->
 
 	<icon src="icon/ios/icon.png" width="1024" height="1024" />
 
-    <platform name="android">
+	<platform name="android">
 		<splash src="res/screen/android/screen-ldpi-portrait.png"  	  density="port-ldpi" />
 		<splash src="res/screen/android/screen-mdpi-portrait.png"  	  density="port-mdpi" />
 		<splash src="res/screen/android/screen-hdpi-portrait.png"  	  density="port-hdpi" />
@@ -47,12 +47,11 @@
 		<icon src="res/icon/android/icon-144-xxhdpi.png"  	density="xxhdpi" />
 		<icon src="res/icon/android/xxxhdpi.png"		  			density="xxxhdpi" />
 		<allow-intent href="market:*" />
-    </platform>
+	</platform>
 
 		<platform name="ios">
-        <allow-intent href="itms:*" />
-        <allow-intent href="itms-apps:*" />
-
+		<allow-intent href="itms:*" />
+		<allow-intent href="itms-apps:*" />
 				<icon src="res/icon/ios/icon-57.png"     		width="57" height="57" />
 				<icon src="res/icon/ios/icon-40.png"     		width="40" height="40" />
 				<icon src="res/icon/ios/icon-60.png"     		width="60" height="60" />		
@@ -62,19 +61,32 @@
 				<icon src="res/icon/ios/icon-60@2x.png"  		width="120" height="120" />
 				<icon src="res/icon/ios/icon-72-2x.png"  		width="144" height="144" />
 				<icon src="res/icon/ios/icon-76-2x.png"  		width="152" height="152" />
-				<icon src="res/icon/ios/icon-167.png"  	 		width="167" height="167" />	
-				<splash src="res/screen/ios/Default@2x~universal~anyany.jpg" />
-    </platform>
+				<icon src="res/icon/ios/icon-167.png"  	 		width="167" height="167" />
+				<icon src="res/icon/ios/icon-167-2x.png"  	width="334" height="334" />
+				
+				<splash src="res/screen/ios/Default~iphone.jpg" width="320" height="480"/>
+				<splash src="res/screen/ios/Default@2x~iphone.jpg" width="640" height="960"/>
+				<splash src="res/screen/ios/Default-Portrait~ipad.jpg" width="768" height="1024"/>
+				<splash src="res/screen/ios/Default-Portrait@2x~ipad.jpg" width="1536" height="2048"/>
+				<splash src="res/screen/ios/Default-Landscape~ipad.jpg" width="1024" height="768"/>
+				<splash src="res/screen/ios/Default-Landscape@2x~ipad.jpg" width="2048" height="1536"/>
+				<splash src="res/screen/ios/Default-568h@2x~iphone.jpg" width="640" height="1136"/>
+				<splash src="res/screen/ios/Default-667h.jpg" width="750" height="1334"/>
+				<splash src="res/screen/ios/Default-Landscape@2x~ipad.jpg" width="2048" height="1536"/>
+				<splash src="res/screen/ios/Default-736h.jpg" width="1242" height="2208"/>
 
-    <access origin="*" />
-    <allow-intent href="http://*/*" />
-    <allow-intent href="https://*/*" />
-    <allow-intent href="tel:*" />
-    <allow-intent href="sms:*" />
-    <allow-intent href="mailto:*" />
-    <allow-intent href="geo:*" />
+				<!-- <splash src="res/screen/ios/Default@2x~universal~anyany.jpg" /> -->
+	</platform>
+
+	<access origin="*" />
+	<allow-intent href="http://*/*" />
+	<allow-intent href="https://*/*" />
+	<allow-intent href="tel:*" />
+	<allow-intent href="sms:*" />
+	<allow-intent href="mailto:*" />
+	<allow-intent href="geo:*" />
 		
-    <engine name="ios" spec="latest" />
-    <engine name="android" spec="latest" />
-    <!-- <plugin name="cordova-plugin-local-notification" spec="https://github.com/katzer/cordova-plugin-local-notifications.git" /> -->
+	<engine name="ios" spec="latest" />
+	<engine name="android" spec="latest" />
+	<!-- <plugin name="cordova-plugin-local-notification" spec="https://github.com/katzer/cordova-plugin-local-notifications.git" /> -->
 </widget>
